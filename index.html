@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -8,9 +8,19 @@
     <title>
         Formulaire Invité World Gym
     </title>
-
+    <link rel="icon" type="image/x-icon" href="./images/globe-americas.svg">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.1/axios.min.js"
+        integrity="sha512-emSwuKiMyYedRwflbZB2ghzX8Cw8fmNVgZ6yQNNXXagFzFOaQmbvQ1vmDkddHjm5AITcBIZfC7k4ShQSjgPAmQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 
 </head>
 
@@ -23,7 +33,7 @@
                 <h1 class="text-light my-5 col-12">Code du jour</h1>
 
                 <div class="col-12 justify-content-center">
-                    <input name="RegCode" placeholder="XXXXXX" type="text" maxlength="6" id="RegCode"
+                    <input name="RegCode" autocomplete="on" placeholder="XXXXXX" type="text" maxlength="6" id="RegCode"
                         class="text-center form-control input-lg my-5">
 
                     <input type="submit" name="btnSubmit" value="Suivant" id="btnSubmit"
@@ -33,22 +43,19 @@
             </div>
 
             <div class="d-none">
+
+                <div id="validations">
+
+
+                </div>
+
                 <input id="GuestServicesAgreement2" type="checkbox" name="GuestServicesAgreement2" checked>
                 <input id="GuestServicesAgreement3" type="checkbox" name="GuestServicesAgreement3" checked>
                 <input id="GuestServicesAgreement1" type="checkbox" name="GuestServicesAgreement1" checked>
                 <input id="Agreement" type="checkbox" name="Agreement" checked>
 
-
-                <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE"
-                    value="/wEPDwUJNTc4MTc5NDYxD2QWAgIDD2QWCAIBDxYCHgNzcmMFGmltYWdlcy9HWU1XRUxDT01FMDVfZnIucG5nZAIDDxYCHgdWaXNpYmxlaBYCZg9kFgICAw8QZBAVDQAIUm9zZW1lcmUKTmV1ZmNoYXRlbAVMYXZhbAhCZWF1cG9ydAlTdC1KZXJvbWUOVHJvaXMtUml2aWVyZXMIQnJvc3NhcmQLR3JpZmZpbnRvd24KU2hlcmJyb29rZRNEb2xsYXJkLWRlcy1Pcm1lYXV4CEwnQWNhZGllCUxhY2hlbmFpZRUNAAhSb3NlbWVyZQpOZXVmY2hhdGVsBUxhdmFsCEJlYXVwb3J0CVN0LUplcm9tZQ5Ucm9pcy1SaXZpZXJlcwhCcm9zc2FyZAtHcmlmZmludG93bgpTaGVyYnJvb2tlE0RvbGxhcmQtZGVzLU9ybWVhdXgITCdBY2FkaWUJTGFjaGVuYWllFCsDDWdnZ2dnZ2dnZ2dnZ2cWAWZkAgUPZBYCZg9kFggCAQ8PFgQeBFRleHQFB0VuZ2xpc2geC05hdmlnYXRlVXJsBR1HdWVzdFJlZy5hc3B4P2d5bWlkPTUmTGFuZz1lbmRkAgMPDxYCHwIFPVZldWlsbGV6IHJlbXBsaXIgY2UgZm9ybXVsYWlyZSBhZmluIGQnYXZvaXIgYWNjw6hzIGF1IGNlbnRyZSFkZAIFDw8WAh8CBX9Wb3VzIGRldmV6IGF2b2lyIHBsdXMgZGUgMTggYW5zIHBvdXIgdXRpbGlzZXIgY2UgZm9ybXVsYWlyZSAtIFZldWlsbGV6IGNvbnN1bHRlciB1biByZXByw6lzZW50YW50IHNpIHZvdXMgYXZleiBtb2lucyBkZSAxOCBhbnMuZGQCBw8PFgIfAgUIKiBSZXF1aXNkZAIHD2QWSAIBDw8WBh8CBRJDb2RlIGQnaW5zY3JpcHRpb24eCENzc0NsYXNzBQx0ZXh0X2RlZmF1bHQeBF8hU0ICAmRkAgMPDxYCHwIFKUZvdXJuaSBwYXIgbGUgcmVwcsOpc2VudGFudCBlbiBzdWNjdXJzYWxlZGQCCQ8PFgIfAgUmTGUgY29kZSBkJ2luc2NyaXB0aW9uIG4nZXN0IHBhcyB2YWxpZGVkZAILDw8WBh8CBRJBZHJlc3NlIGNvdXJyaWVsICofBAUMdGV4dF9kZWZhdWx0HwUCAmRkAhEPDxYCHwIFVExlcyBpbmZvcm1hdGlvbiBjaS1kZXNzb3VzIGRvaXZlbnQgY29ycmVzcG9uZHJlIMOgIHZvdHJlIGRvY3VtZW50IGTigJlpZGVudGlmaWNhdGlvbmRkAhMPDxYGHwIFCVByw6lub20gKh8EBQx0ZXh0X2RlZmF1bHQfBQICZGQCGQ8PFgYfAgUFTm9tICofBAUMdGV4dF9kZWZhdWx0HwUCAmRkAh8PDxYGHwIFFUFubsOpZSBkZSBuYWlzc2FuY2UgKh8EBQx0ZXh0X2RlZmF1bHQfBQICZGQCJw8PFgYfAgUGU2V4ZSAqHwQFDHRleHRfZGVmYXVsdB8FAgJkZAIrDxAPFgIfAgUFSG9tbWVkZGRkAi0PEA8WAh8CBQVGZW1tZWRkZGQCLw8PFgIfAgUaVm9zIGNvb3Jkb25uw6llcyBhY3R1ZWxsZXNkZAIxDw8WBh8CBRVBZHJlc3NlIGR1IGRvbWljaWxlICofBAUMdGV4dF9kZWZhdWx0HwUCAmRkAjcPDxYCHwIFDUFwcGFydGVtZW50ICNkZAI7Dw8WBh8CBQdWaWxsZSAqHwQFDHRleHRfZGVmYXVsdB8FAgJkZAJBDw8WBh8CBRJQcm92aW5jZSAvIMOJdGF0ICofBAUMdGV4dF9kZWZhdWx0HwUCAmRkAkcPDxYGHwIFDUNvZGUgcG9zdGFsICofBAUMdGV4dF9kZWZhdWx0HwUCAmRkAk0PDxYGHwIFF051bcOpcm8gZGUgY2VsbHVsYWlyZSAqHwQFDHRleHRfZGVmYXVsdB8FAgJkZAJTDxYCHglpbm5lcmh0bWwFFEZvcm1hdDogOTk5LTEyMy00NTY3ZAJVDw8WBh8CBRZUeXBlIGQnYWNjw6hzIGF1IGd5bSAqHwQFDHRleHRfZGVmYXVsdB8FAgJkZAJXDxAPZBYCHghPbkNoYW5nZQUZRW5hYmxlRGlzYWJsZVByb21vQ29kZSgpOw8WBGYCAQICAgMWBBBlZWcQBRdJbnZpdMOpIGQndW4gbWVtYnJlIFZJUAUDR1ZNZxAFDUVzc2FpIGdyYXR1aXQFA0dQQ2cQBR9BY2hhdCBk4oCZdW5lIHBhc3NlIGTigJl1biBqb3VyBQJQRGdkZAJbDxYCHgZoaWRkZW4FBmhpZGRlbhYCZg9kFgICAQ8PFgYfAgUnTnVtw6lybyBkZSByw6lmw6lyZW5jZSBPVSBjb2RlIGRlIHByb21vHwQFDHRleHRfZGVmYXVsdB8FAgJkZAJdDw8WAh8CBSFTZXJ2aWNlcyBkaXNwb25pYmxlcyBhdXggaW52aXTDqXNkZAJfDxYCHwAFGWltYWdlcy9BY2Nlc3NCYXNpY19mci5wbmdkAmEPEA8WBh8CBQlKJ2FjY2VwdGUfBAUMdGV4dF9kZWZhdWx0HwUCAmRkZGQCZQ8PFgIfAgUrU2VydmljZXMgVklQIG5vbiBkaXNwb25pYmxlcyBhdXggaW52aXTDqXMgKmRkAmcPFgIfAAUZaW1hZ2VzL0FjY2Vzc0V4dHJhX2ZyLnBuZ2QCaQ8QDxYGHwIFCUonYWNjZXB0ZR8EBQx0ZXh0X2RlZmF1bHQfBQICZGRkZAJtDw8WAh8CBWVQb3VyIHVuIGFjY8OocyBjb21wbGV0IGF1eCBzZXJ2aWNlcyBWSVAsIHZvdXMgcG91dmV6IGFjaGV0ZXIgdW5lIHBhc3NlIGTigJl1biBqb3VyIMOgIGxhIHLDqWNlcHRpb24gKmRkAm8PEA8WBh8CBQxKZSBjb21wcmVuZHMfBAUMdGV4dF9kZWZhdWx0HwUCAmRkZGQCcw8PFgIfAgUIQWNjb3JkICpkZAJ5DxYCHwFoZAJ7DxYCHwFoZAJ9DxAPFgYfAgUJSidhY2NlcHRlHwQFDHRleHRfZGVmYXVsdB8FAgJkZGRkAoEBDw8WAh8CBQdTdWl2YW50ZGQCgwEPDxYEHwIFDEVmZmFjZXIgdG91dB8DBR1HdWVzdFJlZy5hc3B4P2d5bWlkPTUmbGFuZz1mcmRkGAEFHl9fQ29udHJvbHNSZXF1aXJlUG9zdEJhY2tLZXlfXxYGBQdHZW5kZXJNBQdHZW5kZXJGBRdHdWVzdFNlcnZpY2VzQWdyZWVtZW50MQUXR3Vlc3RTZXJ2aWNlc0FncmVlbWVudDIFF0d1ZXN0U2VydmljZXNBZ3JlZW1lbnQzBQlBZ3JlZW1lbnQydezhImCeEPUqaNjw8TomYGac+CTDQXklaUg7Om4DUA==">
-
-                <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="2BFB9D27">
-                <input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION"
-                    value="/wEdABi/TQnZo86oiZIlwxTOOnfOt5kAn8q9Fb1emlXfakTJL6iIOPEWNJ0JB9sbRJZ25cWFE+czl1aCyjbLtuPuRU0tIVu1gi3bgvDqS3Gt3lnrv6UTf/z5iroywnaW5Ukjghl0UvhZ6Vv1+nElDBNChuIcBJPSHygA9hGYlUnOcElVt8TtryTri0G5q7OWWycyrxKad3uWDjSYFSR799bJrj7UvcQkybJJcRiDT2d3j7irvWEanStyFsaEavi/ATdRkG/6sNIJBwj8isYEYoVzyQyG7mR4jHB208W1XIdeephlghTEDXJxQ4QOuiWmgNoElg/IKWiqQu6ks4DD/YmBMcU+oIaIg7ynq3brO3UrVO+yI4wMgEOyMSW7Y1aMMOgrrmHFO6QFh/juion0e5tr/MAz3qvFBQuH27LIdAvvjfnIYKYXHHNdi+1nS31OKe2ltJJN6pr0euTzYWXTpvtv55CCKocq1SP+4Sdj/8eroIm7HzzmltaUM7aEAN+g9cP/m11oZaMNzF0M5nn4DvLAVdOUl1ARB1LJgv/0dcKj3rFmeA==">
-
-
-                <input name="Email" type="text" value="iliandelagrange@gmail.com" maxlength="100" id="Email"
-                    Class="text_box_reg">
+                <input name="Email" autocomplete="email" type="text" value="iliandelagrange@gmail.com" maxlength="100"
+                    id="Email" Class="text_box_reg">
 
 
                 <input name="FirstName" type="text" value="Ilian" maxlength="50" id="FirstName" Class="text_box_reg">
@@ -91,10 +98,8 @@
             </div>
         </div>
     </form>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-        crossorigin="anonymous"></script>
 
+    <script src="index.js"></script>
 </body>
 
 </html>
