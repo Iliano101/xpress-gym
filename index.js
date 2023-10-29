@@ -3,7 +3,7 @@ $(document).ready(function () {
 });
 
 async function fetchValidators() {
-    const url = 'http://localhost:5000';
+    const url = 'https://gym-form-proxy.onrender.com';
 
     const response = await fetch(url);
 
