@@ -5,7 +5,6 @@ $(document).ready(function () {
 
 function autofill() {
     const params = new URL(window.location.href).searchParams
-    console.log(params);
 
     params.forEach((x, y) => {
         if (y === "Gender") {
