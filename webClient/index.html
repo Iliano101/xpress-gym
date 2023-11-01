@@ -41,8 +41,12 @@
                         placeholder="XXXXXX" type="text" maxlength="6" id="RegCode"
                         class="text-center form-control input-lg my-5">
 
-                    <input type="submit" name="btnSubmit" value="Suivant" id="btnSubmit"
-                        class="form-control bg-warning btn btn-outline-dark btn-lg my-5 ">
+                    <button class="btn btn-danger btn-lg form-control my-5" type="submit" name="btnSubmit"
+                        value="Suivant" id="btnSubmit" disabled>
+                        <span id="load" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                        <span id="message" role="status">Loading...</span>
+                    </button>
+
                 </div>
 
             </div>

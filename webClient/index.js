@@ -10,17 +10,17 @@ function autofill() {
         if (y === "Gender") {
             if (x === "M") {
 
-                document.getElementById("GenderM").checked = true;
-                document.getElementById("GenderF").checked = false;
+                $(`#GenderM`).prop('checked', true);
+                $(`#GenderF`).prop('checked', false);
             }
             else {
-                document.getElementById("GenderF").checked = true;
-                document.getElementById("GenderM").checked = false;
+                $(`#GenderF`).prop('checked', true);
+                $(`#GenderM`).prop('checked', false);
 
             }
         }
         else {
-            document.getElementById(y).value = x
+            $(`#${y}`).val(x);
         }
 
     });
@@ -40,4 +40,11 @@ async function fetchValidators() {
         const v = validators[index].outerHTML;
         $("#validations").append(v)
     }
+
+
+    $("#load").hide();
+    $("#message").html("Soumettre")
+    $("#btnSubmit").attr("disabled", false)
+    $("#btnSubmit").removeClass("btn-danger");
+    $("#btnSubmit").addClass("btn-primary");
 }
