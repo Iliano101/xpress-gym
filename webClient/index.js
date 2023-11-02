@@ -28,12 +28,12 @@ function autofill() {
 }
 
 
+
 async function fetchValidators() {
     const url = 'https://gym-form-proxy.onrender.com';
 
-    const response = await fetch(url);
-
-    const gymHtml = await response.text();
+    const gymHtml = await retrieveForm(url);
+    console.log(gymHtml);
 
     const validators = $(gymHtml).find("[type='hidden']");
     for (let index = 0; index < validators.length; index++) {
@@ -47,4 +47,17 @@ async function fetchValidators() {
     $("#btnSubmit").attr("disabled", false)
     $("#btnSubmit").removeClass("btn-danger");
     $("#btnSubmit").addClass("btn-primary");
+}
+
+
+async function retrieveForm(url) {
+    try {
+        const response = await axios.get(url);
+        if (response.status === 200) {
+            //OK
+            return response.data;
+        }
+    } catch (err) {
+        console.log(err);
+    }
 }
