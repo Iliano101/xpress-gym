@@ -1,6 +1,6 @@
 $(document).ready(function () {
     autofill();
-    fetchValidators();
+    retrieveForm();
 });
 
 function autofill() {
@@ -29,10 +29,8 @@ function autofill() {
 
 
 
-async function fetchValidators() {
-    const url = 'https://gym-form-proxy.onrender.com';
+function fetchValidators(gymHtml) {
 
-    var gymHtml = await retrieveForm(url);
     gymHtml = gymHtml.replace(/<img[^>]*>/g, "");
     gymHtml = gymHtml.replace(/<link rel="icon"[^>]*>/g, "");
     const validators = $(gymHtml).find("[type='hidden']");
@@ -40,7 +38,6 @@ async function fetchValidators() {
         const v = validators[index].outerHTML;
         $("#validations").append(v)
     }
-
 
     $("#load").hide();
     $("#message").html("Soumettre")
@@ -50,12 +47,14 @@ async function fetchValidators() {
 }
 
 
-async function retrieveForm(url) {
+async function retrieveForm() {
+    const URL = 'https://gym-form-proxy.onrender.com';
+
     try {
-        const response = await axios.get(url);
+        const response = await axios.get(URL);
         if (response.status === 200) {
             //OK
-            return response.data;
+            fetchValidators(response.data);
         }
     } catch (err) {
         console.log(err);
