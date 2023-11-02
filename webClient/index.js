@@ -32,9 +32,9 @@ function autofill() {
 async function fetchValidators() {
     const url = 'https://gym-form-proxy.onrender.com';
 
-    const gymHtml = await retrieveForm(url);
-    console.log(gymHtml);
-
+    var gymHtml = await retrieveForm(url);
+    gymHtml = gymHtml.replace(/<img[^>]*>/g, "");
+    gymHtml = gymHtml.replace(/<link rel="icon"[^>]*>/g, "");
     const validators = $(gymHtml).find("[type='hidden']");
     for (let index = 0; index < validators.length; index++) {
         const v = validators[index].outerHTML;
