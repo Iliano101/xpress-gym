@@ -1,7 +1,7 @@
 {
-  "name": "gym-proxy",
-  "version": "1.0.0",
-  "description": "",
+  "name": "gym-form-proxy",
+  "version": "1.1.0",
+  "description": "Proxy server for gym-custom-form",
   "main": "server.js",
   "type": "module",
   "scripts": {
@@ -9,11 +9,12 @@
     "start": "node ./server.js",
     "build": "npm install"
   },
-  "author": "",
+  "author": "Ilian Delagrange",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.6.0",
+    "chalk": "^5.3.0",
     "express": "^4.18.2",
-    "nodemon": "^3.0.1",
-    "request": "^2.88.2"
+    "nodemon": "^3.0.1"
   }
 }
