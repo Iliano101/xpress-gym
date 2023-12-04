@@ -29,13 +29,11 @@ function autofill() {
 
 
 
-function fetchValidators(gymHtml) {
+function fetchValidators(validators) {
+    const validatorList = validators.inputs;
 
-    gymHtml = gymHtml.replace(/<img[^>]*>/g, "");
-    gymHtml = gymHtml.replace(/<link rel="icon"[^>]*>/g, "");
-    const validators = $(gymHtml).find("[type='hidden']");
-    for (let index = 0; index < validators.length; index++) {
-        const v = validators[index].outerHTML;
+    for (let index = 0; index < validatorList.length; index++) {
+        const v = validatorList[index];
         $("#validations").append(v)
     }
 
@@ -49,6 +47,7 @@ function fetchValidators(gymHtml) {
 
 async function retrieveForm() {
     const URL = 'https://gym-form-proxy.onrender.com';
+    // const URL = 'http://localhost:5000';
 
     try {
         const response = await axios.get(URL);
