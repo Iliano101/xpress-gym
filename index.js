@@ -8,10 +8,8 @@ function autofill() {
     const params = new URLSearchParams(window.location.search);
     for (const [name, value] of params) {
         if (name.toLowerCase() === "gender") {
-            const genderM = document.getElementById("GenderM");
-            const genderF = document.getElementById("GenderF");
-            genderF.checked = value.toLowerCase() === 'f';
-            genderM.checked = !genderF.checked;
+            document.getElementById("GenderF").checked = value.toLowerCase() === 'f';
+            document.getElementById("GenderM").checked = value.toLowerCase() === 'm';
         } else {
             const inputField = document.getElementById(name);
             if (inputField) {
@@ -32,11 +30,15 @@ function fetchValidators(gymHtml) {
     // Get all the validators
     const validators = [...htmlDoc.querySelectorAll("[type='hidden']")];
 
-    // Add validators to the form
-    const validationContainer = document.getElementById("validations");
+    // Create a document fragment to hold the validators
+    const fragment = document.createDocumentFragment();
+    // Add validators to the fragment
     validators.forEach((element) => {
-        validationContainer.appendChild(element.cloneNode(true));
+        fragment.appendChild(element.cloneNode(true));
     });
+
+    // Append the fragment to the form
+    document.getElementById("validations").appendChild(fragment);
 
     // Enable submit button
     const btnSubmit = document.getElementById("btnSubmit");
