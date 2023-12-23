@@ -1,49 +1,52 @@
-$(document).ready(function () {
+document.addEventListener("DOMContentLoaded", function () {
     autofill();
     retrieveForm();
 });
 
+
 function autofill() {
-    const params = new URL(window.location.href).searchParams
-
-    params.forEach((x, y) => {
-        if (y === "Gender") {
-            if (x === "M") {
-
-                $(`#GenderM`).prop('checked', true);
-                $(`#GenderF`).prop('checked', false);
-            }
-            else {
-                $(`#GenderF`).prop('checked', true);
-                $(`#GenderM`).prop('checked', false);
-
+    const params = new URLSearchParams(window.location.search);
+    for (const [name, value] of params) {
+        if (name.toLowerCase() === "gender") {
+            document.getElementById("GenderF").checked = value.toLowerCase() === 'f';
+            document.getElementById("GenderM").checked = value.toLowerCase() === 'm';
+        } else {
+            const inputField = document.getElementById(name);
+            if (inputField) {
+                inputField.value = value;
             }
         }
-        else {
-            $(`#${y}`).val(x);
-        }
-
-    });
-
+    }
 }
 
-
-
 function fetchValidators(gymHtml) {
-
+    // Remove images and favicon to avoid 404 errors
     gymHtml = gymHtml.replace(/<img[^>]*>/g, "");
     gymHtml = gymHtml.replace(/<link rel="icon"[^>]*>/g, "");
-    const validators = $(gymHtml).find("[type='hidden']");
-    for (let index = 0; index < validators.length; index++) {
-        const v = validators[index].outerHTML;
-        $("#validations").append(v)
-    }
 
-    $("#load").hide();
-    $("#message").html("Soumettre")
-    $("#btnSubmit").attr("disabled", false)
-    $("#btnSubmit").removeClass("btn-danger");
-    $("#btnSubmit").addClass("btn-primary");
+    // Convert HTML string to DOM object to be able to query it
+    const parser = new DOMParser();
+    const htmlDoc = parser.parseFromString(gymHtml, 'text/html');
+    // Get all the validators
+    const validators = [...htmlDoc.querySelectorAll("[type='hidden']")];
+
+    // Create a document fragment to hold the validators
+    const fragment = document.createDocumentFragment();
+    // Add validators to the fragment
+    validators.forEach((element) => {
+        fragment.appendChild(element.cloneNode(true));
+    });
+
+    // Append the fragment to the form
+    document.getElementById("validations").appendChild(fragment);
+
+    // Enable submit button
+    const btnSubmit = document.getElementById("btnSubmit");
+
+    btnSubmit.disabled = false;
+    document.getElementById("load").style.display = 'none';
+    document.getElementById("message").textContent = "Soumettre";
+    btnSubmit.classList.replace("btn-danger", "btn-primary");
 }
 
 
@@ -52,7 +55,7 @@ async function retrieveForm() {
 
     try {
         const response = await axios.get(URL);
-        if (response.status === 200) {
+        if (response.status === 200 && response.data !== null && response.data !== undefined) {
             //OK
             fetchValidators(response.data);
         }
