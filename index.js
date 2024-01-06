@@ -1,15 +1,9 @@
+/**
+ * Initializes the document by calling the autofill and retrieveForm functions.
+ */
 document.addEventListener("DOMContentLoaded", function () {
     autofill();
     retrieveForm();
-});
-
-document.querySelector('#file-input').addEventListener('change', function () {
-    let file = this.files[0];
-
-    if (file) {
-        let imgUrl = URL.createObjectURL(file);
-        getImageText(imgUrl);
-    }
 });
 
 /**
@@ -92,21 +86,3 @@ async function retrieveForm() {
     }
 }
 
-/** 
- * WIP
- * Retrieves the text from an image and sets it as the value of the "RegCode" element.
- * 
- * @param {string} imageLink - The link to the image.
- * @returns {void}
- */
-function getImageText(imageLink) {
-    Tesseract.recognize(
-        imageLink,
-        'eng').then(({ data: { text } }) => {
-            // Removes all spaces from the text and converts it to uppercase and gets the first 6 characters
-
-            text = text.replace(/\s/g, '').toUpperCase().substring(0, 6);
-            // Sets the "RegCode" to the text from the image
-            document.getElementById("RegCode").value = text;
-        });
-}
