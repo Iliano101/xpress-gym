@@ -92,6 +92,13 @@ async function retrieveForm() {
     }
 }
 
+/** 
+ * WIP
+ * Retrieves the text from an image and sets it as the value of the "RegCode" element.
+ * 
+ * @param {string} imageLink - The link to the image.
+ * @returns {void}
+ */
 function getImageText(imageLink) {
     Tesseract.recognize(
         imageLink,
