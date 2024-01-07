@@ -14,30 +14,22 @@ document.addEventListener("DOMContentLoaded", function () {
 function autofill() {
     const params = new URLSearchParams(window.location.search);
     for (const [name, value] of params) {
-        switch (name.toLowerCase()) {
-            case "gender":
-                document.getElementById("GenderF").checked = value.toLowerCase() === 'f';
-                document.getElementById("GenderM").checked = value.toLowerCase() === 'm';
-                break;
-            default:
-                const inputField = document.getElementById(name);
-                if (inputField) {
-                    inputField.value = value;
-                }
-                break;
+        if (name.toLowerCase() === "gender") {
+            document.getElementById("GenderF").checked = value.toLowerCase() === 'f';
+            document.getElementById("GenderM").checked = value.toLowerCase() === 'm';
+        } else {
+            const inputField = document.getElementById(name);
+            if (inputField) {
+                inputField.value = value;
+            }
         }
     }
 }
 
-/**
- * Fetches validators from the provided HTML string and appends them to the form.
- * 
- * @param {string} gymHtml - The HTML string containing the validators.
- * @returns {void}
- */
 function fetchValidators(gymHtml) {
     // Remove images and favicon to avoid 404 errors
-    gymHtml = gymHtml.replace(/<img[^>]*>|<link rel="icon"[^>]*>/g, "");
+    gymHtml = gymHtml.replace(/<img[^>]*>/g, "");
+    gymHtml = gymHtml.replace(/<link rel="icon"[^>]*>/g, "");
 
     // Convert HTML string to DOM object to be able to query it
     const parser = new DOMParser();
@@ -59,30 +51,22 @@ function fetchValidators(gymHtml) {
     const btnSubmit = document.getElementById("btnSubmit");
 
     btnSubmit.disabled = false;
-
     document.getElementById("load").style.display = 'none';
     document.getElementById("message").textContent = "Soumettre";
     btnSubmit.classList.replace("btn-danger", "btn-primary");
 }
 
 
-/**
- * Append the fragment to the form
- * Enable the submit button
- * Hide the loading element
- * Update the message text
- * Replace the CSS class of the submit button
- */
 async function retrieveForm() {
     const URL = 'https://api.scraperapi.com/?api_key=a96e06b1a1dac98df481e1fa570fd17a&url=https%3A%2F%2Fwww.ggpx.info%2FGuestReg.aspx%3Fgymid%3Dst-jerome';
 
     try {
         const response = await axios.get(URL);
-        if (response.status === 200 && response.data) {
+        if (response.status === 200 && response.data !== null && response.data !== undefined) {
+            //OK
             fetchValidators(response.data);
         }
     } catch (err) {
         console.log(err);
     }
 }
-
