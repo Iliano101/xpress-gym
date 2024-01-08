@@ -1,0 +1,9 @@
+{
+    "name": "World Gym Invite Form",
+    "short_name": "GymForm",
+    "description": "A custom form for the World Gym Invite Form",
+    "theme_color": " #292b2c",
+    "background_color": " #292b2c",
+    "display": "standalone",
+    "start_url": "../index.html"
+}
