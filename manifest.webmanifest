@@ -1,0 +1,29 @@
+{
+    "name": "Xpress Gym",
+    "short_name": "Xpress Gym",
+    "start_url": "./index.html",
+    "scope": "./",
+    "display": "standalone",
+    "background_color": "#212529",
+    "theme_color": "#212529",
+    "description": "Cette application est un formulaire pour les invités World Gym. Cette application permet un remplissage rapide.",
+    "icons": [
+        {
+            "src": "./assets/512px-icon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "./assets/svg-icon.svg",
+            "sizes": "any"
+        },
+        {
+            "src": "./assets/maskable-icon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "lang": "fr-CA",
+    "orientation": "portrait"
+}
