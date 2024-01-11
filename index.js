@@ -1,4 +1,5 @@
 // List of input fields to autofill
+const SW_CACHE_NAME = "express-gym-v1";
 const INPUT_LIST = [
 
     { id: "Email", name: "Email", type: "email", autocomplete: "email" },
@@ -16,6 +17,10 @@ const INPUT_LIST = [
 
 ];
 
+const STORED_VALIDATORS_NAMES = {
+    html: "gymHtml",
+    date: "validatorsDate"
+}
 /**
  * Initializes the document by calling the autofill and retrieveForm functions.
  */
@@ -23,11 +28,22 @@ document.addEventListener("DOMContentLoaded", function () {
     registerSW();
 
     let formInfo = { ...localStorage };
-    if (Object.keys(formInfo).length != INPUT_LIST.length) {
+
+    let formDataIsValid = true;
+    INPUT_LIST.forEach(input => {
+        if (localStorage.getItem(input.id) === null) {
+            formDataIsValid = false;
+        }
+    });
+
+    if (formDataIsValid) {
+        autofill(formInfo);
+    }
+    else {
         showDataModal();
     }
 
-    autofill(formInfo);
+
     retrieveForm();
 });
 
@@ -53,6 +69,7 @@ function showDataModal() {
             document.getElementById("infoTable").innerHTML += `<tr><td>${input.name}</td><td><input type="${input.type}" id="${input.id}" autocomplete="${input.autocomplete}" class="form-control user-input" /></td></tr>`;
         }
     });
+
     myModal.show();
 }
 
@@ -61,7 +78,8 @@ function submitUserData() {
         .map(input => {
             if (input.type == 'radio') {
                 // If the input is a radio button, get the value of the checked radio button
-                return { id: input.name, value: document.querySelector(`input[name="${input.name}"]:checked`).value };
+                let checkedRadio = document.querySelector(`input[name="${input.name}"]:checked`);
+                return { id: input.name, value: checkedRadio ? checkedRadio.value : "" };
             } else {
                 // Otherwise, get the id and value of the input
                 return { id: input.id, value: input.value };
@@ -106,6 +124,16 @@ function resetUserData() {
         return;
     }
 
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function (registrations) {
+            for (const registration of registrations) {
+                // unregister service worker
+                registration.unregister();
+            }
+        });
+    }
+
+    caches.delete(SW_CACHE_NAME);
     localStorage.clear();
     location.reload();
 }
@@ -175,15 +203,40 @@ function fetchValidators(gymHtml) {
 async function retrieveForm() {
     const URL = 'https://api.scraperapi.com/?api_key=a96e06b1a1dac98df481e1fa570fd17a&url=https%3A%2F%2Fwww.ggpx.info%2FGuestReg.aspx%3Fgymid%3Dst-jerome';
 
-    try {
-        const response = await axios.get(URL);
-        if (response.status === 200 && response.data !== null && response.data !== undefined) {
-            //OK
-            fetchValidators(response.data);
+    cachedHTML = localStorage.getItem(STORED_VALIDATORS_NAMES.html);
+    cachedDate = localStorage.getItem(STORED_VALIDATORS_NAMES.date);
+
+    if (cachedHTML === null || cachedDate === null || !areSameDay(new Date(cachedDate), new Date())) {
+        try {
+            const response = await axios.get(URL);
+            if (response.status === 200 && response.data !== null && response.data !== undefined) {
+                //OK
+                localStorage.setItem(STORED_VALIDATORS_NAMES.html, response.data);
+                const dateNow = new Date();
+                localStorage.setItem(STORED_VALIDATORS_NAMES.date, `${dateNow.getMonth() + 1}-${dateNow.getDate()}-${dateNow.getFullYear()}`);
+                fetchValidators(response.data);
+            }
+        } catch (err) {
+            console.error(err);
         }
-    } catch (err) {
-        console.error(err);
     }
+    else {
+        fetchValidators(cachedHTML);
+    }
+
+}
+
+/**
+ * Determines if two dates are the same day.
+ *
+ * @param {Date} date1 - The first date.
+ * @param {Date} date2 - The second date.
+ * @returns {boolean} - True if the dates are the same day, false otherwise.
+ */
+function areSameDay(date1, date2) {
+    return date1.getDate() === date2.getDate() &&
+        date1.getMonth() === date2.getMonth() &&
+        date1.getFullYear() === date2.getFullYear();
 }
 
 // #endregion
