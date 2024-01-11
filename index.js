@@ -1,12 +1,42 @@
+const INPUT_LIST = [
+    "Email",
+    "FirstName",
+    "LastName",
+    "YearOfBirth",
+    "Gender",
+    "StreetAddress",
+    "Appartment",
+    "City",
+    "StateProv",
+    "PostalCode",
+    "PhoneMobile",
+    "PromoCode"
+];
+
 /**
  * Initializes the document by calling the autofill and retrieveForm functions.
  */
 document.addEventListener("DOMContentLoaded", function () {
-    autofill();
-    retrieveForm();
     registerSW();
-});
 
+    let formInfo = { ...localStorage };
+    if (Object.keys(formInfo).length != INPUT_LIST.length) {
+        const myModal = new bootstrap.Modal(document.getElementById('infoModal'), {});
+        myModal.show();
+
+        // TODO : Ask for the user's information and store it
+        localStorage.setItem("Email", "iliandelagrange@gmail.com");
+        localStorage.setItem("FirstName", "Ilian");
+        localStorage.setItem("LastName", "Delagrange");
+        localStorage.setItem("Gender", "M");
+
+
+        formInfo = { ...localStorage };
+    }
+
+    autofill(formInfo);
+    retrieveForm();
+});
 
 async function registerSW() {
     if ('serviceWorker' in navigator) {
@@ -24,19 +54,21 @@ async function registerSW() {
  * 
  * @returns {void} This function does not return anything.
  */
-function autofill() {
-    const params = new URLSearchParams(window.location.search);
-    for (const [name, value] of params) {
-        if (name.toLowerCase() === "gender") {
-            document.getElementById("GenderF").checked = value.toLowerCase() === 'f';
-            document.getElementById("GenderM").checked = value.toLowerCase() === 'm';
-        } else {
-            const inputField = document.getElementById(name);
-            if (inputField) {
-                inputField.value = value;
+function autofill(formInfo) {
+    INPUT_LIST.forEach((input) => {
+        const value = formInfo[input];
+        if (value !== undefined) {
+            if (input === "Gender") {
+                document.getElementById("GenderF").checked = value.toLowerCase() === 'f';
+                document.getElementById("GenderM").checked = value.toLowerCase() === 'm';
+            }
+            else {
+                document.getElementById(input).value = value;
             }
         }
-    }
+    });
+
+
 }
 
 function fetchValidators(gymHtml) {
