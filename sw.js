@@ -13,6 +13,7 @@ const staticAssets = [
 
 
 self.addEventListener("install", async err => {
+    caches.delete(cacheName);
     const cache = await caches.open(cacheName);
     await cache.addAll(staticAssets);
     return self.skipWaiting();
