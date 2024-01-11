@@ -37,77 +37,58 @@
 </head>
 
 <body class="bg-dark">
-    <form class="container" method="post" action="https://www.ggpx.info/GuestReg.aspx?gymid=st-jerome" id="frmGuest">
-        <div id="frmGuestWithGymID">
 
-            <div id="validations" class="d-none">
-
-            </div>
-
-            <div class="row text-center centerv">
-                <h1 class="text-light my-5 col-12">Code du jour</h1>
-
-                <div class="col-12 justify-content-center">
-                    <input oninput="this.value = this.value.toUpperCase()" name="RegCode" autocomplete="on"
-                        placeholder="XXXXXX" type="text" maxlength="6" id="RegCode"
-                        class="text-center form-control input-lg my-5">
-
-                    <button class="btn btn-danger btn-lg form-control my-5" type="submit" name="btnSubmit"
-                        value="Suivant" id="btnSubmit" disabled>
-                        <span id="load" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                        <span id="message" role="status">Loading...</span>
-                    </button>
+    <div class="container">
+        <form class="row" method="post" action="https://www.ggpx.info/GuestReg.aspx?gymid=st-jerome" id="frmGuest">
+            <div id="frmGuestWithGymID">
+                <div id="validations" class="d-none">
                 </div>
-
+                <div class="row text-center centerv">
+                    <h1 class="text-light my-5 col-12">Code du jour</h1>
+                    <div class="col-12 justify-content-center">
+                        <input oninput="this.value = this.value.toUpperCase()" name="RegCode" autocomplete="on"
+                            placeholder="XXXXXX" type="text" maxlength="6" id="RegCode"
+                            class="text-center form-control input-lg my-5">
+                        <button class="btn btn-danger btn-lg form-control my-5" type="submit" name="btnSubmit"
+                            value="Suivant" id="btnSubmit" disabled>
+                            <span id="load" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                            <span id="message" role="status">Loading...</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="d-none">
+                    <input id="GuestServicesAgreement2" type="checkbox" name="GuestServicesAgreement2" checked>
+                    <input id="GuestServicesAgreement3" type="checkbox" name="GuestServicesAgreement3" checked>
+                    <input id="GuestServicesAgreement1" type="checkbox" name="GuestServicesAgreement1" checked>
+                    <input id="Agreement" type="checkbox" name="Agreement" checked>
+                    <input name="Email" autocomplete="email" type="text" maxlength="100" id="Email"
+                        Class="text_box_reg">
+                    <input name="FirstName" type="text" maxlength="50" id="FirstName" Class="text_box_reg">
+                    <input name="LastName" type="text" maxlength="50" id="LastName" Class="text_box_reg">
+                    <input name="YearOfBirth" type="text" maxlength="4" id="YearOfBirth" Class="text_box_reg">
+                    <input id="GenderM" type="checkbox" name="GenderM"><label for="GenderM">Homme</label>
+                    <input id="GenderF" type="checkbox" name="GenderF"><label for="GenderF">Femme</label>
+                    <input name="StreetAddress" type="text" maxlength="100" id="StreetAddress" Class="text_box_reg">
+                    <input name="Appartment" type="text" maxlength="50" id="Appartment" Class="text_box_reg">
+                    <input name="City" type="text" maxlength="50" id="City" Class="text_box_reg">
+                    <input name="StateProv" type="text" maxlength="25" id="StateProv" Class="text_box_reg">
+                    <input name="PostalCode" type="text" maxlength="15" id="PostalCode" Class="text_box_reg">
+                    <input name="PhoneMobile" type="text" maxlength="25" id="PhoneMobile" Class="text_box_reg">
+                    <select name="GuestPassType" id="GuestPassType" Class="text_box_reg">
+                        <option value="GVM" selected="selected">VIP</option>
+                    </select>
+                    <input name="PromoCode" type="text" maxlength="25" id="PromoCode" Class="text_box_reg">
+                </div>
             </div>
-
-            <div class="d-none">
-
-                <input id="GuestServicesAgreement2" type="checkbox" name="GuestServicesAgreement2" checked>
-                <input id="GuestServicesAgreement3" type="checkbox" name="GuestServicesAgreement3" checked>
-                <input id="GuestServicesAgreement1" type="checkbox" name="GuestServicesAgreement1" checked>
-                <input id="Agreement" type="checkbox" name="Agreement" checked>
-
-                <input name="Email" autocomplete="email" type="text" maxlength="100" id="Email" Class="text_box_reg">
-
-
-                <input name="FirstName" type="text" maxlength="50" id="FirstName" Class="text_box_reg">
-
-
-                <input name="LastName" type="text" maxlength="50" id="LastName" Class="text_box_reg">
-
-
-
-                <input name="YearOfBirth" type="text" maxlength="4" id="YearOfBirth" Class="text_box_reg">
-
-
-                <input id="GenderM" type="checkbox" name="GenderM"><label for="GenderM">Homme</label>
-
-                <input id="GenderF" type="checkbox" name="GenderF"><label for="GenderF">Femme</label>
-
-                <input name="StreetAddress" type="text" maxlength="100" id="StreetAddress" Class="text_box_reg">
-
-
-
-                <input name="Appartment" type="text" maxlength="50" id="Appartment" Class="text_box_reg">
-
-                <input name="City" type="text" maxlength="50" id="City" Class="text_box_reg">
-
-                <input name="StateProv" type="text" maxlength="25" id="StateProv" Class="text_box_reg">
-
-
-                <input name="PostalCode" type="text" maxlength="15" id="PostalCode" Class="text_box_reg">
-
-                <input name="PhoneMobile" type="text" maxlength="25" id="PhoneMobile" Class="text_box_reg">
-
-                <select name="GuestPassType" id="GuestPassType" Class="text_box_reg">
-                    <option value="GVM" selected="selected">VIP</option>
-                </select>
-
-                <input name="PromoCode" type="text" maxlength="25" id="PromoCode" Class="text_box_reg">
+        </form>
+        <div class="mt-5 row">
+            <!-- Button to delete the saved info -->
+            <div class="col-12 mt-5">
+                <button type="button" class="btn btn-danger btn-sm mt-5" onclick="resetUserData()">
+                    Effacer données
             </div>
         </div>
-    </form>
+    </div>
 
 </body>
 <!-- Les modals -->

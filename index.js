@@ -1,3 +1,4 @@
+// List of input fields to autofill
 const INPUT_LIST = [
     { id: "Email", name: "Email" },
     { id: "FirstName", name: "Prénom" },
@@ -33,6 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
     retrieveForm();
 });
 
+// #region Autofill data management
 function submitUserData() {
     const userInfo = Array.from(document.querySelectorAll('.user-input'))
         .map(input => ({ id: input.id, value: input.value }));
@@ -46,16 +48,7 @@ function submitUserData() {
     autofill(formInfo);
 }
 
-async function registerSW() {
-    if ('serviceWorker' in navigator) {
-        try {
-            await navigator.serviceWorker.register('./sw.js');
-        }
-        catch (err) {
-            console.log(`SW registration failed`);
-        }
-    }
-}
+
 
 /**
  * Function to autofill form fields based on URL parameters.
@@ -79,6 +72,41 @@ function autofill(formInfo) {
 
 }
 
+function resetUserData() {
+    if (!confirm("Attention, vous allez perdre toutes les données enregistrées.")) {
+        return;
+    }
+
+    localStorage.clear();
+    location.reload();
+}
+
+// #endregion
+
+// #region Service Worker
+async function registerSW() {
+    if ('serviceWorker' in navigator) {
+        try {
+            await navigator.serviceWorker.register('./sw.js');
+        }
+        catch (err) {
+            console.log(`SW registration failed`);
+        }
+    }
+}
+// #endregion
+
+// #region Validators
+
+
+/**
+ * Submits user data and stores it in local storage.
+ * 
+ * This function retrieves the values from the input fields with the class 'user-input' and maps them to an array of objects containing the id and value of each input field. 
+ * It then iterates over each input object and stores the id-value pair in the local storage using the localStorage.setItem() method.
+ * 
+ * @returns {void}
+ */
 function fetchValidators(gymHtml) {
     // Remove images and favicon to avoid 404 errors
     gymHtml = gymHtml.replace(/<img[^>]*>/g, "");
@@ -109,7 +137,12 @@ function fetchValidators(gymHtml) {
     btnSubmit.classList.replace("btn-danger", "btn-primary");
 }
 
-
+/**
+ * Retrieves the form data from a specified URL and calls the fetchValidators function.
+ * 
+ * @returns {Promise} A promise that resolves when the form data is successfully retrieved and the fetchValidators function is called.
+ * @throws {Error} If there is an error retrieving the form data.
+ */
 async function retrieveForm() {
     const URL = 'https://api.scraperapi.com/?api_key=a96e06b1a1dac98df481e1fa570fd17a&url=https%3A%2F%2Fwww.ggpx.info%2FGuestReg.aspx%3Fgymid%3Dst-jerome';
 
@@ -123,3 +156,5 @@ async function retrieveForm() {
         console.log(err);
     }
 }
+
+// #endregion
