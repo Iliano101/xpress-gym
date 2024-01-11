@@ -25,5 +25,21 @@
         }
     ],
     "lang": "fr-CA",
-    "orientation": "portrait"
+    "orientation": "portrait",
+    "screenshots": [
+        {
+            "src": "./assets/mobile-screenshot.png",
+            "sizes": "1170x2532",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Application sur mobile"
+        },
+        {
+            "src": "./assets/wide-screenshot.png",
+            "sizes": "1920x1080",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Application sur ordinateur"
+        }
+    ]
 }

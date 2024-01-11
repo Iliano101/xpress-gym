@@ -5,7 +5,7 @@ const INPUT_LIST = [
     { id: "FirstName", name: "Prénom", type: "text", autocomplete: "given-name" },
     { id: "LastName", name: "Nom", type: "text", autocomplete: "family-name" },
     { id: "YearOfBirth", name: "Année de naissance", type: "number", autocomplete: "bday-year" },
-    { id: "Gender", name: "Sexe", type: "text", autocomplete: "sex" },
+    { id: "Gender", name: "Sexe", type: "radio", autocomplete: "M:F" },
     { id: "StreetAddress", name: "Adresse", type: "text", autocomplete: "street-address" },
     { id: "Appartment", name: "Appartement", type: "number", autocomplete: "address-line2" },
     { id: "City", name: "Ville", type: "text", autocomplete: "address-level2" },
@@ -24,12 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let formInfo = { ...localStorage };
     if (Object.keys(formInfo).length != INPUT_LIST.length) {
-        const myModal = new bootstrap.Modal(document.getElementById('infoModal'), {});
-
-        INPUT_LIST.forEach((input) => {
-            document.getElementById("infoTable").innerHTML += `<tr><td>${input.name}</td><td><input type="${input.type}" id="${input.id}" autocomplete="${input.autocomplete}" class="form-control user-input" /></td></tr>`;
-        });
-        myModal.show();
+        showDataModal();
     }
 
     autofill(formInfo);
@@ -37,9 +32,41 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // #region Autofill data management
+
+function showDataModal() {
+    const myModal = new bootstrap.Modal(document.getElementById('infoModal'), {});
+
+    INPUT_LIST.forEach((input) => {
+
+        if (input.type === "radio") {
+            let html = `<tr><td>${input.name}</td><td>`;
+            input.autocomplete.split(":").forEach(radioLabel => {
+                html += "<div class='m-1'>"
+                html += `<input type="radio" id="${input.id}${radioLabel}" name="${input.id}" autocomplete="on" class="form-check-input m-1 user-input" value="${radioLabel}" />`
+                html += `<label class="form-check-label" for="${input.id}${radioLabel}">${radioLabel}</label>`
+                html += "</div>"
+            });
+            html += "</td></tr>";
+            document.getElementById("infoTable").innerHTML += html;
+        }
+        else {
+            document.getElementById("infoTable").innerHTML += `<tr><td>${input.name}</td><td><input type="${input.type}" id="${input.id}" autocomplete="${input.autocomplete}" class="form-control user-input" /></td></tr>`;
+        }
+    });
+    myModal.show();
+}
+
 function submitUserData() {
     const userInfo = Array.from(document.querySelectorAll('.user-input'))
-        .map(input => ({ id: input.id, value: input.value }));
+        .map(input => {
+            if (input.type == 'radio') {
+                // If the input is a radio button, get the value of the checked radio button
+                return { id: input.name, value: document.querySelector(`input[name="${input.name}"]:checked`).value };
+            } else {
+                // Otherwise, get the id and value of the input
+                return { id: input.id, value: input.value };
+            }
+        });
 
     userInfo.forEach((input) => {
         // write to local storage
@@ -92,7 +119,7 @@ async function registerSW() {
             await navigator.serviceWorker.register('./sw.js');
         }
         catch (err) {
-            console.log(`SW registration failed`);
+            console.error(`SW registration failed`);
         }
     }
 }
@@ -155,7 +182,7 @@ async function retrieveForm() {
             fetchValidators(response.data);
         }
     } catch (err) {
-        console.log(err);
+        console.error(err);
     }
 }
 
