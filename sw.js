@@ -8,7 +8,9 @@ const staticAssets = [
     "./manifest.webmanifest",
     "./assets/512px-icon.png",
     "./assets/maskable-icon.png",
-    "./assets/svg-icon.svg"
+    "./assets/svg-icon.svg",
+    "./assets/mobile-screenshot.png",
+    "./assets/wide-screenshot.png"
 ];
 
 
