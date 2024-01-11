@@ -1,17 +1,19 @@
 // List of input fields to autofill
 const INPUT_LIST = [
-    { id: "Email", name: "Email" },
-    { id: "FirstName", name: "Prénom" },
-    { id: "LastName", name: "Nom" },
-    { id: "YearOfBirth", name: "Année de naissance" },
-    { id: "Gender", name: "Sexe" },
-    { id: "StreetAddress", name: "Adresse" },
-    { id: "Appartment", name: "Appartement" },
-    { id: "City", name: "Ville" },
-    { id: "StateProv", name: "Province" },
-    { id: "PostalCode", name: "Code postal" },
-    { id: "PhoneMobile", name: "Téléphone mobile" },
-    { id: "PromoCode", name: "Code VIP" }
+
+    { id: "Email", name: "Email", type: "email", autocomplete: "email" },
+    { id: "FirstName", name: "Prénom", type: "text", autocomplete: "given-name" },
+    { id: "LastName", name: "Nom", type: "text", autocomplete: "family-name" },
+    { id: "YearOfBirth", name: "Année de naissance", type: "number", autocomplete: "bday-year" },
+    { id: "Gender", name: "Sexe", type: "text", autocomplete: "sex" },
+    { id: "StreetAddress", name: "Adresse", type: "text", autocomplete: "street-address" },
+    { id: "Appartment", name: "Appartement", type: "number", autocomplete: "address-line2" },
+    { id: "City", name: "Ville", type: "text", autocomplete: "address-level2" },
+    { id: "StateProv", name: "Province", type: "text", autocomplete: "address-level1" },
+    { id: "PostalCode", name: "Code postal", type: "text", autocomplete: "postal-code" },
+    { id: "PhoneMobile", name: "Téléphone mobile", type: "tel", autocomplete: "tel" },
+    { id: "PromoCode", name: "Code VIP", type: "text", autocomplete: "off" }
+
 ];
 
 /**
@@ -25,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const myModal = new bootstrap.Modal(document.getElementById('infoModal'), {});
 
         INPUT_LIST.forEach((input) => {
-            document.getElementById("infoTable").innerHTML += `<tr><td>${input.name}</td><td><input type="text" id="${input.id}" class="form-control user-input" /></td></tr>`;
+            document.getElementById("infoTable").innerHTML += `<tr><td>${input.name}</td><td><input type="${input.type}" id="${input.id}" autocomplete="${input.autocomplete}" class="form-control user-input" /></td></tr>`;
         });
         myModal.show();
     }
