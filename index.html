@@ -112,26 +112,22 @@
 </body>
 <!-- Les modals -->
 <div id="infoModal" class="modal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered ">
+        <div class="modal-content bg-dark">
             <div class="modal-header">
-                <h5 class="modal-title">Extraction</h5>
+                <h5 class="modal-title text-light">Veuillez entrer vos informations
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table id="extraction" class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Element</th>
-                            <th scope="col">Quantité</th>
-                        </tr>
-                    </thead>
+                <table id="infoTable" class="table table-dark">
                     <tbody>
                     </tbody>
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                    onclick="submitUserData()">Soumettre</button>
             </div>
         </div>
     </div>

@@ -1,16 +1,16 @@
 const INPUT_LIST = [
-    "Email",
-    "FirstName",
-    "LastName",
-    "YearOfBirth",
-    "Gender",
-    "StreetAddress",
-    "Appartment",
-    "City",
-    "StateProv",
-    "PostalCode",
-    "PhoneMobile",
-    "PromoCode"
+    { id: "Email", name: "Email" },
+    { id: "FirstName", name: "Prénom" },
+    { id: "LastName", name: "Nom" },
+    { id: "YearOfBirth", name: "Année de naissance" },
+    { id: "Gender", name: "Sexe" },
+    { id: "StreetAddress", name: "Adresse" },
+    { id: "Appartment", name: "Appartement" },
+    { id: "City", name: "Ville" },
+    { id: "StateProv", name: "Province" },
+    { id: "PostalCode", name: "Code postal" },
+    { id: "PhoneMobile", name: "Téléphone mobile" },
+    { id: "PromoCode", name: "Code VIP" }
 ];
 
 /**
@@ -22,21 +22,29 @@ document.addEventListener("DOMContentLoaded", function () {
     let formInfo = { ...localStorage };
     if (Object.keys(formInfo).length != INPUT_LIST.length) {
         const myModal = new bootstrap.Modal(document.getElementById('infoModal'), {});
+
+        INPUT_LIST.forEach((input) => {
+            document.getElementById("infoTable").innerHTML += `<tr><td>${input.name}</td><td><input type="text" id="${input.id}" class="form-control user-input" /></td></tr>`;
+        });
         myModal.show();
-
-        // TODO : Ask for the user's information and store it
-        localStorage.setItem("Email", "iliandelagrange@gmail.com");
-        localStorage.setItem("FirstName", "Ilian");
-        localStorage.setItem("LastName", "Delagrange");
-        localStorage.setItem("Gender", "M");
-
-
-        formInfo = { ...localStorage };
     }
 
     autofill(formInfo);
     retrieveForm();
 });
+
+function submitUserData() {
+    const userInfo = Array.from(document.querySelectorAll('.user-input'))
+        .map(input => ({ id: input.id, value: input.value }));
+
+    userInfo.forEach((input) => {
+        // write to local storage
+        localStorage.setItem(input.id, input.value);
+    });
+
+    formInfo = { ...localStorage };
+    autofill(formInfo);
+}
 
 async function registerSW() {
     if ('serviceWorker' in navigator) {
@@ -56,14 +64,14 @@ async function registerSW() {
  */
 function autofill(formInfo) {
     INPUT_LIST.forEach((input) => {
-        const value = formInfo[input];
+        const value = formInfo[input.id];
         if (value !== undefined) {
-            if (input === "Gender") {
+            if (input.id === "Gender") {
                 document.getElementById("GenderF").checked = value.toLowerCase() === 'f';
                 document.getElementById("GenderM").checked = value.toLowerCase() === 'm';
             }
             else {
-                document.getElementById(input).value = value;
+                document.getElementById(input.id).value = value;
             }
         }
     });
