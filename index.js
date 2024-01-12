@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let formDataIsValid = true;
     INPUT_LIST.forEach(input => {
-        if (localStorage.getItem(input.id) === null) {
+        if (localStorage.getItem(`${input.id}Modal`) === null) {
             formDataIsValid = false;
         }
     });
@@ -58,15 +58,15 @@ function showDataModal() {
             let html = `<tr><td>${input.name}</td><td>`;
             input.autocomplete.split(":").forEach(radioLabel => {
                 html += "<div class='m-1'>"
-                html += `<input type="radio" id="${input.id}${radioLabel}" name="${input.id}" autocomplete="on" class="form-check-input m-1 user-input" value="${radioLabel}" />`
-                html += `<label class="form-check-label" for="${input.id}${radioLabel}">${radioLabel}</label>`
+                html += `<input type="radio" id="${input.id}Modal${radioLabel}" name="${input.id}Modal" autocomplete="on" class="form-check-input m-1 user-input" value="${radioLabel}" />`
+                html += `<label class="form-check-label" for="${input.id}Modal${radioLabel}">${radioLabel}</label>`
                 html += "</div>"
             });
             html += "</td></tr>";
             document.getElementById("infoTable").innerHTML += html;
         }
         else {
-            document.getElementById("infoTable").innerHTML += `<tr><td>${input.name}</td><td><input type="${input.type}" id="${input.id}" autocomplete="${input.autocomplete}" class="form-control user-input" /></td></tr>`;
+            document.getElementById("infoTable").innerHTML += `<tr><td><label class="form-check-label" for="${input.id}Modal">${input.name}</label></td><td><input type="${input.type}" id="${input.id}Modal" autocomplete="${input.autocomplete}" class="form-control user-input" /></td></tr>`;
         }
     });
 
@@ -104,7 +104,7 @@ function submitUserData() {
  */
 function autofill(formInfo) {
     INPUT_LIST.forEach((input) => {
-        const value = formInfo[input.id];
+        const value = formInfo[`${input.id}Modal`];
         if (value !== undefined) {
             if (input.id === "Gender") {
                 document.getElementById("GenderF").checked = value.toLowerCase() === 'f';
@@ -138,6 +138,24 @@ function resetUserData() {
     location.reload();
 }
 
+
+function resetCache() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function (registrations) {
+            for (const registration of registrations) {
+                // unregister service worker
+                registration.unregister();
+            }
+        });
+    }
+
+    localStorage.removeItem(STORED_VALIDATORS_NAMES.html);
+    localStorage.removeItem(STORED_VALIDATORS_NAMES.date);
+    caches.delete(SW_CACHE_NAME);
+    alert("Cache vidé");
+    location.reload();
+}
+
 // #endregion
 
 // #region Service Worker
@@ -164,7 +182,7 @@ async function registerSW() {
  * 
  * @returns {void}
  */
-function fetchValidators(gymHtml) {
+function fetchValidators(gymHtml, bootstrapBackgroundColor = "bg-primary", bootstrapTextColor = "text-white") {
     // Remove images and favicon to avoid 404 errors
     gymHtml = gymHtml.replace(/<img[^>]*>/g, "");
     gymHtml = gymHtml.replace(/<link rel="icon"[^>]*>/g, "");
@@ -191,7 +209,8 @@ function fetchValidators(gymHtml) {
     btnSubmit.disabled = false;
     document.getElementById("load").style.display = 'none';
     document.getElementById("message").textContent = "Soumettre";
-    btnSubmit.classList.replace("btn-danger", "btn-primary");
+    btnSubmit.classList.replace("btn-danger", bootstrapBackgroundColor);
+    btnSubmit.classList.replace("text-light", bootstrapTextColor);
 }
 
 /**
@@ -214,7 +233,7 @@ async function retrieveForm() {
                 localStorage.setItem(STORED_VALIDATORS_NAMES.html, response.data);
                 const dateNow = new Date();
                 localStorage.setItem(STORED_VALIDATORS_NAMES.date, `${dateNow.getMonth() + 1}-${dateNow.getDate()}-${dateNow.getFullYear()}`);
-                fetchValidators(response.data);
+                fetchValidators(response.data, "bg-success", "text-light");
             }
         } catch (err) {
             console.error(err);

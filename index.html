@@ -49,8 +49,8 @@
                         <input oninput="this.value = this.value.toUpperCase()" name="RegCode" autocomplete="on"
                             placeholder="XXXXXX" type="text" maxlength="6" id="RegCode"
                             class="text-center form-control input-lg my-5">
-                        <button class="btn btn-danger btn-lg form-control my-5" type="submit" name="btnSubmit"
-                            value="Suivant" id="btnSubmit" disabled>
+                        <button class="btn btn-danger btn-lg form-control my-5 text-light" type="submit"
+                            name="btnSubmit" value="Suivant" id="btnSubmit" disabled>
                             <span id="load" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
                             <span id="message" role="status">Loading...</span>
                         </button>
@@ -82,10 +82,14 @@
             </div>
         </form>
         <div class="mt-5 row">
-            <!-- Button to delete the saved info -->
-            <div class="col-12 mt-5">
-                <button type="button" class="btn btn-danger btn-sm mt-5" onclick="resetUserData()">
+            <div class="mt-5 justify-content-center">
+                <!-- Button to delete the saved info -->
+                <button type="button" class="btn btn-danger btn-sm mt-5 col-12 col-md-2" onclick="resetUserData()">
                     Effacer données
+                </button>
+                <!-- Button to delete the cache -->
+                <button type="button" class="btn btn-danger btn-sm mt-5 col-12 col-md-2" onclick="resetCache()">
+                    Supprimer cache
                 </button>
             </div>
         </div>
