@@ -86,31 +86,34 @@
             <div class="col-12 mt-5">
                 <button type="button" class="btn btn-danger btn-sm mt-5" onclick="resetUserData()">
                     Effacer données
+                </button>
             </div>
         </div>
     </div>
 
-</body>
-<!-- Les modals -->
-<div id="infoModal" class="modal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered ">
-        <div class="modal-content bg-dark">
-            <div class="modal-header">
-                <h5 class="modal-title text-light">Veuillez entrer vos informations
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <table id="infoTable" class="table table-dark">
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                    onclick="submitUserData()">Soumettre</button>
+    <!-- Modal -->
+    <div id="infoModal" class="modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered ">
+            <div class="modal-content bg-dark">
+                <div class="modal-header">
+                    <h5 class="modal-title text-light">Veuillez entrer vos informations
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table id="infoTable" class="table table-dark">
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                        onclick="submitUserData()">Soumettre</button>
+                </div>
             </div>
         </div>
     </div>
+</body>
+
 
 </html>
