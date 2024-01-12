@@ -58,8 +58,8 @@ function showDataModal() {
             let html = `<tr><td>${input.name}</td><td>`;
             input.autocomplete.split(":").forEach(radioLabel => {
                 html += "<div class='m-1'>"
-                html += `<input type="radio" id="${input.id}Modal${radioLabel}" name="${input.id}Modal" autocomplete="on" class="form-check-input m-1 user-input" value="${radioLabel}" />`
-                html += `<label class="form-check-label" for="${input.id}Modal${radioLabel}">${radioLabel}</label>`
+                html += `<input type="radio" id="${input.id}Modal${radioLabel}" name="${input.id}Modal" autocomplete="on" class="form-check-input user-input" value="${radioLabel}" />`
+                html += `<label class="form-check-label mx-2" for="${input.id}Modal${radioLabel}">${radioLabel}</label>`
                 html += "</div>"
             });
             html += "</td></tr>";
