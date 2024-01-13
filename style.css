@@ -2,11 +2,21 @@
     padding-top: 15vh;
 }
 
-input[type=radio] {
-    transform: scale(1.5);
-}
-
 .modal-header-h5 {
     font-size: 1.5rem;
     font-weight: bold;
+}
+
+#content {
+    height: 100vh;
+}
+
+.bottom-left {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+.large-text {
+    font-size: xx-large;
 }

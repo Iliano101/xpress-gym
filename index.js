@@ -21,6 +21,7 @@ const STORED_VALIDATORS_NAMES = {
     html: "gymHtml",
     date: "validatorsDate"
 }
+
 /**
  * Initializes the document by calling the autofill and retrieveForm functions.
  */
@@ -49,6 +50,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // #region Autofill data management
 
+/**
+ * Displays a modal with a form for showing data.
+ *
+ * @function showDataModal
+ * @returns {void}
+ */
 function showDataModal() {
     const myModal = new bootstrap.Modal(document.getElementById('infoModal'), {});
 
@@ -57,9 +64,9 @@ function showDataModal() {
         if (input.type === "radio") {
             let html = `<tr><td>${input.name}</td><td>`;
             input.autocomplete.split(":").forEach(radioLabel => {
-                html += "<div class='m-1'>"
-                html += `<input type="radio" id="${input.id}Modal${radioLabel}" name="${input.id}Modal" autocomplete="on" class="form-check-input user-input" value="${radioLabel}" />`
-                html += `<label class="form-check-label mx-2" for="${input.id}Modal${radioLabel}">${radioLabel}</label>`
+                html += "<div class='d-flex align-items-center'>"
+                html += `<input type="radio" id="${input.id}Modal${radioLabel}" name="${input.id}Modal" autocomplete="on" class="form-check-input large-text" value="${radioLabel}" />`
+                html += `<label class="form-check-label mx-2 mt-1" for="${input.id}Modal${radioLabel}">${radioLabel}</label>`
                 html += "</div>"
             });
             html += "</td></tr>";
@@ -73,6 +80,11 @@ function showDataModal() {
     myModal.show();
 }
 
+/**
+ * Submits user data to local storage and autofills the form with the stored data.
+ *
+ * @returns {void}
+ */
 function submitUserData() {
     const userInfo = Array.from(document.querySelectorAll('.user-input'))
         .map(input => {
@@ -119,6 +131,13 @@ function autofill(formInfo) {
 
 }
 
+/**
+ * Displays a modal with a form for showing data.
+ * 
+ * This function creates a Bootstrap modal and populates it with a form. The form contains input fields based on the INPUT_LIST array. For each input in the array, a table row is created in the modal form. If the input type is "radio", multiple radio buttons are created for the input. Otherwise, a single input field is created.
+ * 
+ * @returns {void}
+ */
 function resetUserData() {
     if (!confirm("Attention, vous allez perdre toutes les données enregistrées.")) {
         return;
@@ -135,24 +154,6 @@ function resetUserData() {
 
     caches.delete(SW_CACHE_NAME);
     localStorage.clear();
-    location.reload();
-}
-
-
-function resetCache() {
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function (registrations) {
-            for (const registration of registrations) {
-                // unregister service worker
-                registration.unregister();
-            }
-        });
-    }
-
-    localStorage.removeItem(STORED_VALIDATORS_NAMES.html);
-    localStorage.removeItem(STORED_VALIDATORS_NAMES.date);
-    caches.delete(SW_CACHE_NAME);
-    alert("Cache vidé");
     location.reload();
 }
 
