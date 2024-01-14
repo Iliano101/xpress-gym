@@ -1,5 +1,5 @@
-// List of input fields to autofill
-const SW_CACHE_NAME = "express-gym-v1";
+// #region Constants
+const SERVICEWORKER_CACHE_NAME = "express-gym-v1";
 const INPUT_LIST = [
 
     { id: "Email", name: "Email", type: "email", autocomplete: "email" },
@@ -25,17 +25,15 @@ const STORED_VALIDATORS_NAMES = {
 const GITHUB_API_URL = "https://api.github.com/repos/iliano101/xpress-gym/commits/vercel";
 const CURRENT_VERSION_STORAGE_KEY = "currentVersion";
 
+// #endregion
 
-/**
- * Initializes the document by calling the autofill and retrieveForm functions.
- */
+// #region Event Listeners
 document.addEventListener("DOMContentLoaded", function () {
     registerSW();
 
     let formDataIsValid = true;
     INPUT_LIST.forEach(input => {
         if (localStorage.getItem(`${input.id}Modal`) === null) {
-            console.log(`${input.id}Modal is not valid`);
             formDataIsValid = false;
         }
     });
@@ -47,28 +45,46 @@ document.addEventListener("DOMContentLoaded", function () {
         showDataModal();
     }
 
-
     retrieveForm();
     checkForUpdates();
 });
+// #endregion
 
-// #region Auto update
-
+// #region Service Worker
 /**
- * Check for updates and reset cache if a new version is available.
+ * Registers a service worker for the current page.
+ * 
+ * @returns {Promise} A promise that resolves when the service worker is successfully registered, or rejects with an error if registration fails.
+ */
+async function registerSW() {
+    if ('serviceWorker' in navigator) {
+        try {
+            await navigator.serviceWorker.register('./sw.js');
+        }
+        catch (err) {
+            console.error(`SW registration failed`);
+        }
+    }
+}
+// #endregion
+
+// #region Automatic Updates
+/**
+ * Check for updates and update the application if a new version is available.
  *
- * @returns {Promise<void>} - A promise that resolves once the cache is reset.
+ * @returns {Promise<void>} - A promise that resolves once the check for updates is complete.
  */
 async function checkForUpdates() {
+    const OK = 200;
+
     const currentVersion = localStorage.getItem(CURRENT_VERSION_STORAGE_KEY);
 
     try {
         const response = await axios.get(GITHUB_API_URL);
-        if (response.status === 200 && response.data !== null && response.data !== undefined) {
-            //OK
+        if (response.status === OK && response.data !== null && response.data !== undefined) {
             const latestVersion = response.data.sha;
             if (currentVersion == null || currentVersion != latestVersion) {
-                resetCache(latestVersion);
+                updateApplication(latestVersion);
             }
         }
     } catch (err) {
@@ -79,33 +95,42 @@ async function checkForUpdates() {
 }
 
 /**
- * Resets the cache by unregistering the service worker and deleting the cache.
+ * Updates the application to a new version.
  * 
+ * @param {string} newVersion - The new version of the application.
  * @returns {void}
  */
-function resetCache(newVersion) {
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function (registrations) {
-            for (const registration of registrations) {
-                // unregister service worker
-                registration.unregister();
-            }
-        });
-    }
-
-    caches.delete(SW_CACHE_NAME);
+function updateApplication(newVersion) {
+    unregisterServiceWorkers();
+    caches.delete(SERVICEWORKER_CACHE_NAME);
     localStorage.setItem(CURRENT_VERSION_STORAGE_KEY, newVersion);
     location.reload();
 }
 
-//#endregion
+/**
+ * Unregisters all service workers.
+ * 
+ * This function checks if the browser supports service workers and then retrieves all active service worker registrations.
+ * It iterates through each registration and unregisters the service worker.
+ * 
+ * @returns {void}
+ */
+function unregisterServiceWorkers() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function (registrations) {
+            for (const serviceWorker of registrations) {
+                serviceWorker.unregister();
+            }
+        });
+    }
+}
+// #endregion
 
 // #region Autofill data management
 
 /**
- * Displays a modal with a form for showing data.
- *
- * @function showDataModal
+ * Displays a modal with input fields for showing data.
+ * 
  * @returns {void}
  */
 function showDataModal() {
@@ -133,7 +158,9 @@ function showDataModal() {
 }
 
 /**
- * Submits user data to local storage and autofills the form with the stored data.
+ * Submits user data to local storage and autofills form fields.
+ *
+ * This function retrieves user input from form fields with the class 'user-input'. It maps each input element to an object with the input's id as the key and the input's value as the value. If the input is a radio button, it checks for the selected radio button and includes its value in the object. The user data is then stored in local storage using the input id as the key and the input value as the value.
  *
  * @returns {void}
  */
@@ -141,19 +168,14 @@ function submitUserData() {
     const userInfo = Array.from(document.querySelectorAll('.user-input'))
         .map(input => {
             if (input.type == 'radio') {
-                // If the input is a radio button, get the value of the checked radio button
-                console.log("Its a radio button");
-                console.log(input.name);
                 let checkedRadio = document.querySelector(`input[name="${input.name}"]:checked`);
                 return { id: input.name, value: checkedRadio ? checkedRadio.value : "" };
             } else {
-                // Otherwise, get the id and value of the input
                 return { id: input.id, value: input.value };
             }
         });
 
     userInfo.forEach((input) => {
-        // write to local storage
         localStorage.setItem(input.id, input.value);
     });
 
@@ -164,9 +186,10 @@ function submitUserData() {
 
 
 /**
- * Function to autofill form fields based on URL parameters.
+ * Autofills form fields with values from the provided formInfo object.
  * 
- * @returns {void} This function does not return anything.
+ * @param {Object} formInfo - The formInfo object containing the values to autofill.
+ * @returns {void}
  */
 function autofill(formInfo) {
     INPUT_LIST.forEach((input) => {
@@ -186,79 +209,49 @@ function autofill(formInfo) {
 }
 
 /**
- * Displays a modal with a form for showing data.
+ * Resets the user data by clearing the local storage and updating the application version to "UNDEFINED".
  * 
- * This function creates a Bootstrap modal and populates it with a form. The form contains input fields based on the INPUT_LIST array. For each input in the array, a table row is created in the modal form. If the input type is "radio", multiple radio buttons are created for the input. Otherwise, a single input field is created.
+ * This function prompts the user with a confirmation message before proceeding with the data reset. If the user confirms,
+ * the function clears the local storage using the `localStorage.clear()` method. It then calls the `updateApplication` function
+ * with the argument "UNDEFINED" to update the application version. Finally, the function reloads the page using `location.reload()`.
  * 
- * @returns {void}
+ * @returns {void} This function does not return any value.
  */
 function resetUserData() {
     if (!confirm("Attention, vous allez perdre toutes les données enregistrées.")) {
         return;
     }
-
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function (registrations) {
-            for (const registration of registrations) {
-                // unregister service worker
-                registration.unregister();
-            }
-        });
-    }
-
-    caches.delete(SW_CACHE_NAME);
     localStorage.clear();
-    location.reload();
+    updateApplication("UNDEFINED");
 }
 
-// #endregion
-
-// #region Service Worker
-async function registerSW() {
-    if ('serviceWorker' in navigator) {
-        try {
-            await navigator.serviceWorker.register('./sw.js');
-        }
-        catch (err) {
-            console.error(`SW registration failed`);
-        }
-    }
-}
 // #endregion
 
 // #region Validators
 
-
 /**
- * Submits user data and stores it in local storage.
+ * Fetches validators from the given gym HTML and appends them to the "validations" element.
  * 
- * This function retrieves the values from the input fields with the class 'user-input' and maps them to an array of objects containing the id and value of each input field. 
- * It then iterates over each input object and stores the id-value pair in the local storage using the localStorage.setItem() method.
- * 
+ * @param {string} gymHtml - The HTML content of the gym.
+ * @param {string} bootstrapBackgroundColor - The background color class from Bootstrap framework (default: "bg-primary").
+ * @param {string} bootstrapTextColor - The text color class from Bootstrap framework (default: "text-white").
  * @returns {void}
  */
 function fetchValidators(gymHtml, bootstrapBackgroundColor = "bg-primary", bootstrapTextColor = "text-white") {
-    // Remove images and favicon to avoid 404 errors
     gymHtml = gymHtml.replace(/<img[^>]*>/g, "");
     gymHtml = gymHtml.replace(/<link rel="icon"[^>]*>/g, "");
 
-    // Convert HTML string to DOM object to be able to query it
     const parser = new DOMParser();
     const htmlDoc = parser.parseFromString(gymHtml, 'text/html');
-    // Get all the validators
     const validators = [...htmlDoc.querySelectorAll("[type='hidden']")];
 
-    // Create a document fragment to hold the validators
     const fragment = document.createDocumentFragment();
-    // Add validators to the fragment
     validators.forEach((element) => {
         fragment.appendChild(element.cloneNode(true));
     });
 
-    // Append the fragment to the form
     document.getElementById("validations").appendChild(fragment);
 
-    // Enable submit button
     const btnSubmit = document.getElementById("btnSubmit");
 
     btnSubmit.disabled = false;
@@ -269,25 +262,26 @@ function fetchValidators(gymHtml, bootstrapBackgroundColor = "bg-primary", boots
 }
 
 /**
- * Retrieves the form data from a specified URL and calls the fetchValidators function.
+ * Retrieves the form data from the specified URL and updates the validators if necessary.
  * 
- * @returns {Promise} A promise that resolves when the form data is successfully retrieved and the fetchValidators function is called.
- * @throws {Error} If there is an error retrieving the form data.
+ * @returns {Promise} A promise that resolves when the form data is retrieved and the validators are updated.
  */
 async function retrieveForm() {
     const URL = 'https://api.scraperapi.com/?api_key=a96e06b1a1dac98df481e1fa570fd17a&url=https%3A%2F%2Fwww.ggpx.info%2FGuestReg.aspx%3Fgymid%3Dst-jerome';
 
     cachedHTML = localStorage.getItem(STORED_VALIDATORS_NAMES.html);
-    cachedDate = localStorage.getItem(STORED_VALIDATORS_NAMES.date);
+    cachedDateString = localStorage.getItem(STORED_VALIDATORS_NAMES.date);
 
-    if (cachedHTML === null || cachedDate === null || !areSameDay(new Date(cachedDate), new Date())) {
+    let now = new Date();
+
+    if (cachedHTML === null || cachedDateString === null || !areSameDay(new Date(cachedDateString), now)) {
         try {
             const response = await axios.get(URL);
             if (response.status === 200 && response.data !== null && response.data !== undefined) {
                 //OK
                 localStorage.setItem(STORED_VALIDATORS_NAMES.html, response.data);
-                const dateNow = new Date();
-                localStorage.setItem(STORED_VALIDATORS_NAMES.date, `${dateNow.getMonth() + 1}-${dateNow.getDate()}-${dateNow.getFullYear()}`);
+                now = new Date();
+                localStorage.setItem(STORED_VALIDATORS_NAMES.date, `${now.getMonth() + 1}-${now.getDate()}-${now.getFullYear()}`);
                 fetchValidators(response.data, "bg-success", "text-light");
             }
         } catch (err) {
