@@ -23,6 +23,9 @@ const STORED_VALIDATORS_NAMES = {
 }
 
 const GITHUB_API_URL = "https://api.github.com/repos/iliano101/xpress-gym/commits/vercel";
+const CURRENT_VERSION_STORAGE_KEY = "currentVersion";
+
+// #region Auto update
 
 /**
  * Initializes the document by calling the autofill and retrieveForm functions.
