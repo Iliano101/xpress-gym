@@ -25,7 +25,6 @@ const STORED_VALIDATORS_NAMES = {
 const GITHUB_API_URL = "https://api.github.com/repos/iliano101/xpress-gym/commits/vercel";
 const CURRENT_VERSION_STORAGE_KEY = "currentVersion";
 
-// #region Auto update
 
 /**
  * Initializes the document by calling the autofill and retrieveForm functions.
@@ -33,17 +32,16 @@ const CURRENT_VERSION_STORAGE_KEY = "currentVersion";
 document.addEventListener("DOMContentLoaded", function () {
     registerSW();
 
-    let formInfo = { ...localStorage };
-
     let formDataIsValid = true;
     INPUT_LIST.forEach(input => {
         if (localStorage.getItem(`${input.id}Modal`) === null) {
+            console.log(`${input.id}Modal is not valid`);
             formDataIsValid = false;
         }
     });
 
     if (formDataIsValid) {
-        autofill(formInfo);
+        autofill({ ...localStorage });
     }
     else {
         showDataModal();
@@ -54,7 +52,13 @@ document.addEventListener("DOMContentLoaded", function () {
     checkForUpdates();
 });
 
+// #region Auto update
 
+/**
+ * Check for updates and reset cache if a new version is available.
+ *
+ * @returns {Promise<void>} - A promise that resolves once the cache is reset.
+ */
 async function checkForUpdates() {
     const currentVersion = localStorage.getItem(CURRENT_VERSION_STORAGE_KEY);
 
@@ -73,6 +77,7 @@ async function checkForUpdates() {
 
 
 }
+
 /**
  * Resets the cache by unregistering the service worker and deleting the cache.
  * 
@@ -112,7 +117,7 @@ function showDataModal() {
             let html = `<tr><td>${input.name}</td><td>`;
             input.autocomplete.split(":").forEach(radioLabel => {
                 html += "<div class='d-flex align-items-center'>"
-                html += `<input type="radio" id="${input.id}Modal${radioLabel}" name="${input.id}Modal" autocomplete="on" class="form-check-input large-text" value="${radioLabel}" />`
+                html += `<input type="radio" id="${input.id}Modal${radioLabel}" name="${input.id}Modal" autocomplete="on" class="form-check-input large-text user-input" value="${radioLabel}" />`
                 html += `<label class="form-check-label mx-2 mt-1" for="${input.id}Modal${radioLabel}">${radioLabel}</label>`
                 html += "</div>"
             });
@@ -137,6 +142,8 @@ function submitUserData() {
         .map(input => {
             if (input.type == 'radio') {
                 // If the input is a radio button, get the value of the checked radio button
+                console.log("Its a radio button");
+                console.log(input.name);
                 let checkedRadio = document.querySelector(`input[name="${input.name}"]:checked`);
                 return { id: input.name, value: checkedRadio ? checkedRadio.value : "" };
             } else {
