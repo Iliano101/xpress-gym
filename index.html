@@ -37,24 +37,22 @@
 </head>
 
 <body class="bg-dark">
-    <div id="content" class="container">
+    <div class="container">
 
         <form class="row" method="post" action="https://www.ggpx.info/GuestReg.aspx?gymid=st-jerome" id="frmGuest">
             <div id="frmGuestWithGymID">
                 <div id="validations" class="d-none">
                 </div>
-                <div class="row text-center centerv">
-                    <h1 class="text-light my-5 col-12">Code du jour</h1>
-                    <div class="col-12 justify-content-center">
-                        <input oninput="this.value = this.value.toUpperCase()" name="RegCode" autocomplete="on"
-                            placeholder="XXXXXX" type="text" maxlength="6" id="RegCode"
-                            class="text-center form-control input-lg my-5">
-                        <button class="btn btn-danger btn-lg form-control my-5 text-light" type="submit"
-                            name="btnSubmit" value="Suivant" id="btnSubmit" disabled>
-                            <span id="load" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                            <span id="message" role="status">Loading...</span>
-                        </button>
-                    </div>
+                <div id="content" class="row text-center align-items-center">
+                    <h1 class="text-light large-text col-12">Code du jour</h1>
+                    <input oninput="this.value = this.value.toUpperCase()" name="RegCode" autocomplete="on"
+                        placeholder="XXXXXX" type="text" maxlength="6" id="RegCode"
+                        class="text-center form-control input-lg">
+                    <button class="btn btn-danger btn-lg form-control text-light" type="submit" name="btnSubmit"
+                        value="Suivant" id="btnSubmit" disabled>
+                        <span id="load" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                        <span id="message" role="status">Loading...</span>
+                    </button>
                 </div>
                 <div class="d-none">
                     <input id="GuestServicesAgreement2" type="checkbox" name="GuestServicesAgreement2" checked>
