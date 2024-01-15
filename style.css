@@ -16,3 +16,7 @@
 .large-text {
     font-size: xx-large;
 }
+
+.font-bold {
+    font-weight: bold;
+}
