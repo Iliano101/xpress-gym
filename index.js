@@ -95,7 +95,17 @@ function showID() {
     if (imageURL === undefined) {
         return;
     }
-    window.open(imageURL);
+    const container = document.getElementById("container");
+
+    container.classList.remove("container");
+    container.classList.add("container-fluid");
+
+    container.innerHTML = `
+    <button class="btn btn-primary my-2" onclick="location.reload()">Retour</button>
+    <div id="image-content">
+    <img src="${imageURL}" alt="Pièce d'indentité" class="image-max-height">
+    </div>
+    `;
 
     // TODO : READ FILE FROM LOCAL STORAGE AND DISPLAY IT
 }
