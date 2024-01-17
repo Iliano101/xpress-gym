@@ -27,9 +27,13 @@ const CURRENT_VERSION_STORAGE_KEY = "currentVersion";
 
 // #endregion
 
-// #region Event Listeners
+// #region Page Load
 document.addEventListener("DOMContentLoaded", function () {
-    registerSW();
+    checkForUpdates();
+});
+
+function executePageLaod() {
+    registerServiceWorker();
 
     let formDataIsValid = true;
     INPUT_LIST.forEach(input => {
@@ -46,8 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     retrieveForm();
-    checkForUpdates();
-});
+}
 // #endregion
 
 // #region Service Worker
@@ -56,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
  * 
  * @returns {Promise} A promise that resolves when the service worker is successfully registered, or rejects with an error if registration fails.
  */
-async function registerSW() {
+async function registerServiceWorker() {
     if ('serviceWorker' in navigator) {
         try {
             await navigator.serviceWorker.register('./sw.js');
@@ -69,11 +72,35 @@ async function registerSW() {
 // #endregion
 
 // #region ID management
-function showID() {
-    console.log("showID");
-    // TODO : READ FILE FROM LOCAL STORAGE AND DISPLAY IT
 
+function addImageInputEventListener() {
+    const input = document.getElementById("IDimageModal");
+    if (input === undefined) {
+        return;
+    }
+
+    input.addEventListener("change", (event) => {
+        const fr = new FileReader();
+
+        fr.readAsDataURL(input.files[0]);
+
+        fr.addEventListener("load", () => {
+            localStorage.setItem("IDimageModal", fr.result);
+        });
+    });
 }
+
+function showID() {
+    const imageURL = localStorage.getItem("IDimageModal");
+    if (imageURL === undefined) {
+        return;
+    }
+    window.open(imageURL);
+
+    // TODO : READ FILE FROM LOCAL STORAGE AND DISPLAY IT
+}
+
+
 // #endregion
 
 // #region Automatic Updates
@@ -93,6 +120,9 @@ async function checkForUpdates() {
             const latestVersion = response.data.sha;
             if (currentVersion == null || currentVersion != latestVersion) {
                 updateApplication(latestVersion);
+            }
+            else {
+                executePageLaod();
             }
         }
     } catch (err) {
@@ -158,13 +188,14 @@ function showDataModal() {
             document.getElementById("infoTable").innerHTML += html;
         }
         else if (input.type === "file") {
-            document.getElementById("infoTable").innerHTML += `<tr><td><label class="form-check-label" for="${input.id}Modal">${input.name}</label></td><td><input type="${input.type}" id="${input.id}Modal" accept="${input.autocomplete}" class="form-control user-input" /></td></tr>`;
+            document.getElementById("infoTable").innerHTML += `<tr><td><label class="form-check-label" for="${input.id}Modal">${input.name}</label></td><td><input type="${input.type}" id="${input.id}Modal" accept="${input.autocomplete}" change="saveID()" class="form-control user-input" /></td></tr>`;
         }
         else {
             document.getElementById("infoTable").innerHTML += `<tr><td><label class="form-check-label" for="${input.id}Modal">${input.name}</label></td><td><input type="${input.type}" id="${input.id}Modal" autocomplete="${input.autocomplete}" class="form-control user-input" /></td></tr>`;
         }
     });
 
+    addImageInputEventListener();
     myModal.show();
 }
 
@@ -182,18 +213,15 @@ function submitUserData() {
                 let checkedRadio = document.querySelector(`input[name="${input.name}"]:checked`);
                 return { id: input.name, value: checkedRadio ? checkedRadio.value : "" };
             }
-            else if (input.type == 'file') {
-                console.log(`Reading file from ${input.id}`);
-                const fr = new FileReader();
-                // TODO : READ FILE AND RETURN SOMETHING THAT CAN BE STORED IN LOCAL STORAGE
-            }
-            else {
+            else if (input.type !== 'file') {
                 return { id: input.id, value: input.value };
             }
         });
 
     userInfo.forEach((input) => {
-        localStorage.setItem(input.id, input.value);
+        if (input !== undefined) {
+            localStorage.setItem(input.id, input.value);
+        }
     });
 
     formInfo = { ...localStorage };
