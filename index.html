@@ -45,11 +45,21 @@
                     <input oninput="this.value = this.value.toUpperCase()" name="RegCode" autocomplete="on"
                         placeholder="XXXXXX" type="text" maxlength="6" id="RegCode"
                         class="col-12 text-center form-control input-lg">
-                    <button class="btn btn-danger btn-lg col-12 form-control text-light" type="submit" name="btnSubmit"
-                        value="Suivant" id="btnSubmit" disabled>
-                        <span id="load" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                        <span id="message" role="status">Loading...</span>
-                    </button>
+                    <div class="col-12">
+                        <div class="row">
+                            <button class="btn btn-danger btn-lg col form-control text-light m-1" type="submit"
+                                name="btnSubmit" value="Suivant" id="btnSubmit" disabled>
+                                <span id="load" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                <span id="message" role="status">Chargement...</span>
+                            </button>
+                            <button class="btn btn-info btn-lg col form-control text-muted m-1" id="openIDButton"
+                                type="button" name="openIDButton" onclick="showID()">Ouvrir
+                                pièce
+                                d'identité</button>
+                            <img id="imageID" src="" alt="">
+                        </div>
+                    </div>
+
                 </div>
                 <div class="d-none">
                     <input id="GuestServicesAgreement2" type="checkbox" name="GuestServicesAgreement2" checked>

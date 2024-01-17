@@ -13,8 +13,8 @@ const INPUT_LIST = [
     { id: "StateProv", name: "Province", type: "text", autocomplete: "address-level1" },
     { id: "PostalCode", name: "Code postal", type: "text", autocomplete: "postal-code" },
     { id: "PhoneMobile", name: "Téléphone mobile", type: "tel", autocomplete: "tel" },
-    { id: "PromoCode", name: "Code VIP", type: "text", autocomplete: "off" }
-
+    { id: "PromoCode", name: "Code VIP", type: "text", autocomplete: "off" },
+    { id: "IDimage", name: "Pièce d'identité", type: "file", autocomplete: "image/*" }
 ];
 
 const STORED_VALIDATORS_NAMES = {
@@ -65,6 +65,14 @@ async function registerSW() {
             console.error(`SW registration failed`);
         }
     }
+}
+// #endregion
+
+// #region ID management
+function showID() {
+    console.log("showID");
+    // TODO : READ FILE FROM LOCAL STORAGE AND DISPLAY IT
+
 }
 // #endregion
 
@@ -149,6 +157,9 @@ function showDataModal() {
             html += "</td></tr>";
             document.getElementById("infoTable").innerHTML += html;
         }
+        else if (input.type === "file") {
+            document.getElementById("infoTable").innerHTML += `<tr><td><label class="form-check-label" for="${input.id}Modal">${input.name}</label></td><td><input type="${input.type}" id="${input.id}Modal" accept="${input.autocomplete}" class="form-control user-input" /></td></tr>`;
+        }
         else {
             document.getElementById("infoTable").innerHTML += `<tr><td><label class="form-check-label" for="${input.id}Modal">${input.name}</label></td><td><input type="${input.type}" id="${input.id}Modal" autocomplete="${input.autocomplete}" class="form-control user-input" /></td></tr>`;
         }
@@ -170,7 +181,13 @@ function submitUserData() {
             if (input.type == 'radio') {
                 let checkedRadio = document.querySelector(`input[name="${input.name}"]:checked`);
                 return { id: input.name, value: checkedRadio ? checkedRadio.value : "" };
-            } else {
+            }
+            else if (input.type == 'file') {
+                console.log(`Reading file from ${input.id}`);
+                const fr = new FileReader();
+                // TODO : READ FILE AND RETURN SOMETHING THAT CAN BE STORED IN LOCAL STORAGE
+            }
+            else {
                 return { id: input.id, value: input.value };
             }
         });
@@ -199,7 +216,7 @@ function autofill(formInfo) {
                 document.getElementById("GenderF").checked = value.toLowerCase() === 'f';
                 document.getElementById("GenderM").checked = value.toLowerCase() === 'm';
             }
-            else {
+            else if (input.type !== "file") {
                 document.getElementById(input.id).value = value;
             }
         }
@@ -256,7 +273,7 @@ function fetchValidators(gymHtml, bootstrapBackgroundColor = "bg-primary", boots
 
     btnSubmit.disabled = false;
     document.getElementById("load").style.display = 'none';
-    document.getElementById("message").textContent = "Soumettre";
+    document.getElementById("message").textContent = "Soumettre le formulaire";
     btnSubmit.classList.replace("btn-danger", bootstrapBackgroundColor);
     btnSubmit.classList.replace("text-light", bootstrapTextColor);
 }
