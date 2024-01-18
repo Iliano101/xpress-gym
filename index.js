@@ -36,11 +36,12 @@ function executePageLaod() {
     registerServiceWorker();
 
     let formDataIsValid = true;
-    INPUT_LIST.forEach(input => {
+    for (let i = 0; i < INPUT_LIST.length; i++) {
+        const input = INPUT_LIST[i];
         if (localStorage.getItem(`${input.id}Modal`) === null) {
             formDataIsValid = false;
         }
-    });
+    }
 
     if (formDataIsValid) {
         autofill({ ...localStorage });
@@ -184,16 +185,20 @@ function unregisterServiceWorkers() {
 function showDataModal() {
     const myModal = new bootstrap.Modal(document.getElementById('infoModal'), {});
 
-    INPUT_LIST.forEach((input) => {
+    for (let i = 0; i < INPUT_LIST.length; i++) {
+        const input = INPUT_LIST[i];
 
         if (input.type === "radio") {
             let html = `<tr><td>${input.name}</td><td>`;
-            input.autocomplete.split(":").forEach(radioLabel => {
+            const options = input.autocomplete.split(":");
+
+            for (let i = 0; i < options.length; i++) {
+                const radioLabel = options[i];
                 html += "<div class='d-flex align-items-center'>"
                 html += `<input type="radio" id="${input.id}Modal${radioLabel}" name="${input.id}Modal" autocomplete="on" class="form-check-input large-text user-input" value="${radioLabel}" />`
                 html += `<label class="form-check-label mx-2 mt-1" for="${input.id}Modal${radioLabel}">${radioLabel}</label>`
                 html += "</div>"
-            });
+            }
             html += "</td></tr>";
             document.getElementById("infoTable").innerHTML += html;
         }
@@ -203,7 +208,7 @@ function showDataModal() {
         else {
             document.getElementById("infoTable").innerHTML += `<tr><td><label class="form-check-label" for="${input.id}Modal">${input.name}</label></td><td><input type="${input.type}" id="${input.id}Modal" autocomplete="${input.autocomplete}" class="form-control user-input" /></td></tr>`;
         }
-    });
+    }
 
     addImageInputEventListener();
     myModal.show();
@@ -228,11 +233,13 @@ function submitUserData() {
             }
         });
 
-    userInfo.forEach((input) => {
+
+    for (let i = 0; i < userInfo.length; i++) {
+        const input = userInfo[i];
         if (input !== undefined) {
             localStorage.setItem(input.id, input.value);
         }
-    });
+    }
 
     formInfo = { ...localStorage };
     autofill(formInfo);
@@ -247,7 +254,8 @@ function submitUserData() {
  * @returns {void}
  */
 function autofill(formInfo) {
-    INPUT_LIST.forEach((input) => {
+    for (let i = 0; i < INPUT_LIST.length; i++) {
+        const input = INPUT_LIST[i];
         const value = formInfo[`${input.id}Modal`];
         if (value !== undefined) {
             if (input.id === "Gender") {
@@ -258,9 +266,7 @@ function autofill(formInfo) {
                 document.getElementById(input.id).value = value;
             }
         }
-    });
-
-
+    }
 }
 
 /**
@@ -301,9 +307,10 @@ function fetchValidators(gymHtml, bootstrapBackgroundColor = "bg-primary", boots
     const validators = [...htmlDoc.querySelectorAll("[type='hidden']")];
 
     const fragment = document.createDocumentFragment();
-    validators.forEach((element) => {
-        fragment.appendChild(element.cloneNode(true));
-    });
+
+    for (let i = 0; i < validators.length; i++) {
+        fragment.appendChild(validators[i].cloneNode(true));
+    }
 
     document.getElementById("validations").appendChild(fragment);
 
