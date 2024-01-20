@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
     checkForUpdates();
 });
 
-function executePageLaod() {
+function executePageLoad() {
     registerServiceWorker();
 
     let formDataIsValid = true;
@@ -131,16 +131,14 @@ async function checkForUpdates() {
             const latestVersion = response.data.sha;
             if (currentVersion == null || currentVersion != latestVersion) {
                 updateApplication(latestVersion);
-            }
-            else {
-                executePageLaod();
+                return;
             }
         }
     } catch (err) {
         console.error(err);
     }
 
-
+    executePageLoad();
 }
 
 /**
