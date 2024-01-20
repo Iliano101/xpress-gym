@@ -16,13 +16,9 @@
     <link rel="manifest" href="./manifest.webmanifest">
     <!-- Icon -->
     <link rel="shortcut icon" href="./assets/svg-icon.svg" type="image/x-icon">
-    <!-- Bootstrap CSS -->
-    <link href=" https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css " rel="stylesheet">
     <!-- Custom CSS -->
     <link href="style.css" rel="stylesheet">
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.min.js" defer></script>
     <!-- Axios -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.1/axios.min.js"
         integrity="sha512-emSwuKiMyYedRwflbZB2ghzX8Cw8fmNVgZ6yQNNXXagFzFOaQmbvQ1vmDkddHjm5AITcBIZfC7k4ShQSjgPAmQ=="
@@ -33,34 +29,35 @@
 
 </head>
 
-<body class="bg-dark">
-    <div id="container" class="container">
-
-        <form class="row" method="post" action="https://www.ggpx.info/GuestReg.aspx?gymid=st-jerome" id="frmGuest">
+<body>
+    <div id="container">
+        <form method="post" action="https://www.ggpx.info/GuestReg.aspx?gymid=st-jerome" id="frmGuest">
             <div id="frmGuestWithGymID">
-                <div id="validations" class="d-none">
+                <div id="validations">
                 </div>
-                <div id="content" class="row text-center align-items-center">
-                    <h1 class="text-light font-bold col-12">Code du jour</h1>
-                    <input oninput="this.value = this.value.toUpperCase()" name="RegCode" autocomplete="on"
-                        placeholder="XXXXXX" type="text" maxlength="6" id="RegCode"
-                        class="col-12 text-center form-control input-lg">
-                    <div class="col-12">
-                        <div class="row">
-                            <button class="btn btn-danger btn-lg col form-control text-light m-1" type="submit"
-                                name="btnSubmit" value="Suivant" id="btnSubmit" disabled>
-                                <span id="load" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                                <span id="message" role="status">Chargement...</span>
-                            </button>
-                            <button class="btn btn-info btn-lg col form-control text-muted m-1" id="openIDButton"
-                                type="button" name="openIDButton" onclick="showID()">Ouvrir
-                                pièce
-                                d'identité</button>
-                        </div>
+                <div id="content">
+                    <!-- Title -->
+                    <h1 id="title">Xpress Gym</h1>
+                    <!-- Code input -->
+                    <div id="code-input-div">
+                        <label for="RegCode">Code du jour</label>
+                        <input id="RegCode" oninput="this.value = this.value.toUpperCase()" name="RegCode"
+                            autocomplete="on" placeholder="XXXXXX" type="text" maxlength="6">
                     </div>
-
+                    <!-- Functions button -->
+                    <div id="buttons-div">
+                        <button id="submit-button" type="submit" name="submit-button" value="Suivant"
+                            disabled>Chargement...</button>
+                        <button id="open-id-button" type="button" name="open-id-button" onclick="showID()">Ouvrir
+                            pièce
+                            d'identité</button>
+                    </div>
+                    <!-- Info clearing button -->
+                    <button id="clear-info-button" type="button" onclick="resetUserData()">
+                        Effacer informations
+                    </button>
                 </div>
-                <div class="d-none">
+                <div class="hidden">
                     <input id="GuestServicesAgreement2" type="checkbox" name="GuestServicesAgreement2" checked>
                     <input id="GuestServicesAgreement3" type="checkbox" name="GuestServicesAgreement3" checked>
                     <input id="GuestServicesAgreement1" type="checkbox" name="GuestServicesAgreement1" checked>
@@ -85,37 +82,6 @@
                 </div>
             </div>
         </form>
-        <!-- Cache clearing -->
-        <div class="row">
-            <button type="button" class="btn btn-danger bottom-left col-12 col-sm-auto" onclick="resetUserData()">
-                Effacer informations
-            </button>
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div id="infoModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="info-header"
-        aria-describedby="info-header">
-        <div class="modal-dialog modal-dialog-centered ">
-            <div class="modal-content bg-dark">
-                <div class="modal-header">
-                    <p id="info-header" class="modal-title text-light modal-header-h5">Veuillez entrer vos
-                        informations
-                    </p>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <table id="infoTable" class="table table-dark">
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                        onclick="submitUserData()">Soumettre</button>
-                </div>
-            </div>
-        </div>
     </div>
 </body>
 

@@ -98,17 +98,12 @@ function showID() {
     }
     const container = document.getElementById("container");
 
-    container.classList.remove("container");
-    container.classList.add("container-fluid");
 
     container.innerHTML = `
-    <button class="btn btn-primary my-2" onclick="location.reload()">Retour</button>
+    <button onclick="location.reload()">Retour</button>
     <div id="image-content">
-    <img src="${imageURL}" alt="Pièce d'indentité" class="image-max-height">
-    </div>
-    `;
-
-    // TODO : READ FILE FROM LOCAL STORAGE AND DISPLAY IT
+    <img src="${imageURL}" alt="Pièce d'indentité">
+    </div>`;
 }
 
 
@@ -181,7 +176,12 @@ function unregisterServiceWorkers() {
  * @returns {void}
  */
 function showDataModal() {
-    const myModal = new bootstrap.Modal(document.getElementById('infoModal'), {});
+    if (!confirm("L'information engegistrée est incomplète ou vide. Voulez-vous la compléter maintenant?")) {
+        return;
+    }
+
+    const container = document.getElementById("container");
+    container.innerHTML = ``;
 
     for (let i = 0; i < INPUT_LIST.length; i++) {
         const input = INPUT_LIST[i];
@@ -192,24 +192,24 @@ function showDataModal() {
 
             for (let i = 0; i < options.length; i++) {
                 const radioLabel = options[i];
-                html += "<div class='d-flex align-items-center'>"
-                html += `<input type="radio" id="${input.id}Modal${radioLabel}" name="${input.id}Modal" autocomplete="on" class="form-check-input large-text user-input" value="${radioLabel}" />`
-                html += `<label class="form-check-label mx-2 mt-1" for="${input.id}Modal${radioLabel}">${radioLabel}</label>`
+                html += "<div>"
+                html += `<input type="radio" class="user-input" id="${input.id}Modal${radioLabel}" name="${input.id}Modal" autocomplete="on" value="${radioLabel}" />`
+                html += `<label  for="${input.id}Modal${radioLabel}">${radioLabel}</label>`
                 html += "</div>"
             }
             html += "</td></tr>";
-            document.getElementById("infoTable").innerHTML += html;
+            container.innerHTML += html;
         }
         else if (input.type === "file") {
-            document.getElementById("infoTable").innerHTML += `<tr><td><label class="form-check-label" for="${input.id}Modal">${input.name}</label></td><td><input type="${input.type}" id="${input.id}Modal" accept="${input.autocomplete}" change="saveID()" class="form-control user-input" /></td></tr>`;
+            container.innerHTML += `<tr><td><label for="${input.id}Modal">${input.name}</label></td><td><input type="${input.type}" class="user-input" id="${input.id}Modal" accept="${input.autocomplete}" change="saveID()" /></td></tr>`;
         }
         else {
-            document.getElementById("infoTable").innerHTML += `<tr><td><label class="form-check-label" for="${input.id}Modal">${input.name}</label></td><td><input type="${input.type}" id="${input.id}Modal" autocomplete="${input.autocomplete}" class="form-control user-input" /></td></tr>`;
+            container.innerHTML += `<tr><td><label for="${input.id}Modal">${input.name}</label></td><td><input type="${input.type}" class="user-input"  id="${input.id}Modal" autocomplete="${input.autocomplete}" /></td></tr>`;
         }
     }
+    container.innerHTML += `<button onclick="submitUserData()">Soumettre</button>`;
 
     addImageInputEventListener();
-    myModal.show();
 }
 
 /**
@@ -220,17 +220,16 @@ function showDataModal() {
  * @returns {void}
  */
 function submitUserData() {
-    const userInfo = Array.from(document.querySelectorAll('.user-input'))
-        .map(input => {
-            if (input.type == 'radio') {
-                let checkedRadio = document.querySelector(`input[name="${input.name}"]:checked`);
-                return { id: input.name, value: checkedRadio ? checkedRadio.value : "" };
-            }
-            else if (input.type !== 'file') {
-                return { id: input.id, value: input.value };
-            }
-        });
-
+    const userInfo = Array.from(document.querySelectorAll('.user-input')).map(input => {
+        console.log(input);
+        if (input.type == 'radio') {
+            let checkedRadio = document.querySelector(`input[name="${input.name}"]:checked`);
+            return { id: input.name, value: checkedRadio ? checkedRadio.value : "" };
+        }
+        else if (input.type !== 'file') {
+            return { id: input.id, value: input.value };
+        }
+    });
 
     for (let i = 0; i < userInfo.length; i++) {
         const input = userInfo[i];
@@ -240,7 +239,7 @@ function submitUserData() {
     }
 
     formInfo = { ...localStorage };
-    autofill(formInfo);
+    location.reload();
 }
 
 
@@ -296,7 +295,7 @@ function resetUserData() {
  * @param {string} bootstrapTextColor - The text color class from Bootstrap framework (default: "text-white").
  * @returns {void}
  */
-function fetchValidators(gymHtml, bootstrapBackgroundColor = "bg-primary", bootstrapTextColor = "text-white") {
+function fetchValidators(gymHtml) {
     gymHtml = gymHtml.replace(/<img[^>]*>/g, "");
     gymHtml = gymHtml.replace(/<link rel="icon"[^>]*>/g, "");
 
@@ -312,13 +311,10 @@ function fetchValidators(gymHtml, bootstrapBackgroundColor = "bg-primary", boots
 
     document.getElementById("validations").appendChild(fragment);
 
-    const btnSubmit = document.getElementById("btnSubmit");
+    const btnSubmit = document.getElementById("submit-button");
 
     btnSubmit.disabled = false;
-    document.getElementById("load").style.display = 'none';
-    document.getElementById("message").textContent = "Soumettre le formulaire";
-    btnSubmit.classList.replace("btn-danger", bootstrapBackgroundColor);
-    btnSubmit.classList.replace("text-light", bootstrapTextColor);
+    btnSubmit.innerText = "Soumettre";
 }
 
 /**
@@ -342,7 +338,7 @@ async function retrieveForm() {
                 localStorage.setItem(STORED_VALIDATORS_NAMES.html, response.data);
                 now = new Date();
                 localStorage.setItem(STORED_VALIDATORS_NAMES.date, `${now.getMonth() + 1}-${now.getDate()}-${now.getFullYear()}`);
-                fetchValidators(response.data, "bg-success", "text-light");
+                fetchValidators(response.data);
             }
         } catch (err) {
             console.error(err);
