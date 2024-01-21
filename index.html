@@ -40,22 +40,26 @@
                     <h1 id="title">Xpress Gym</h1>
                     <!-- Code input -->
                     <div id="code-input-div">
-                        <label for="RegCode">Code du jour</label>
+                        <label id="reg-code-label" for="RegCode">Code du jour</label>
                         <input id="RegCode" oninput="this.value = this.value.toUpperCase()" name="RegCode"
                             autocomplete="on" placeholder="XXXXXX" type="text" maxlength="6">
                     </div>
                     <!-- Functions button -->
                     <div id="buttons-div">
-                        <button id="submit-button" type="submit" name="submit-button" value="Suivant"
-                            disabled>Chargement...</button>
-                        <button id="open-id-button" type="button" name="open-id-button" onclick="showID()">Ouvrir
+                        <!-- Submit -->
+                        <button id="submit-button" class="accent-button" type="submit" name="submit-button"
+                            value="Suivant" disabled>Chargement...</button>
+                        <!-- ID -->
+                        <button id="open-id-button" class="accent-button" type="button" name="open-id-button"
+                            onclick="showID()">Ouvrir
                             pièce
                             d'identité</button>
+                        <!-- Info clearing button -->
+                        <button id="clear-info-button" class="accent-button" type="button" onclick="getUserData()">
+                            Entrer les informations
+                        </button>
                     </div>
-                    <!-- Info clearing button -->
-                    <button id="clear-info-button" type="button" onclick="resetUserData()">
-                        Effacer informations
-                    </button>
+
                 </div>
                 <div class="hidden">
                     <input id="GuestServicesAgreement2" type="checkbox" name="GuestServicesAgreement2" checked>

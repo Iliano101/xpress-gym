@@ -8,7 +8,7 @@ const INPUT_LIST = [
     { id: "YearOfBirth", name: "Année de naissance", type: "number", autocomplete: "bday-year" },
     { id: "Gender", name: "Sexe", type: "radio", autocomplete: "M:F" },
     { id: "StreetAddress", name: "Adresse", type: "text", autocomplete: "street-address" },
-    { id: "Appartment", name: "Appartement", type: "number", autocomplete: "address-line2" },
+    { id: "Appartment", name: "Appartement", type: "text", autocomplete: "address-line2" },
     { id: "City", name: "Ville", type: "text", autocomplete: "address-level2" },
     { id: "StateProv", name: "Province", type: "text", autocomplete: "address-level1" },
     { id: "PostalCode", name: "Code postal", type: "text", autocomplete: "postal-code" },
@@ -43,13 +43,7 @@ function executePageLoad() {
         }
     }
 
-    if (formDataIsValid) {
-        autofill({ ...localStorage });
-    }
-    else {
-        showDataModal();
-    }
-
+    autofill({ ...localStorage });
     retrieveForm();
 }
 // #endregion
@@ -73,7 +67,6 @@ async function registerServiceWorker() {
 // #endregion
 
 // #region ID management
-
 function addImageInputEventListener() {
     const input = document.getElementById("IDimageModal");
     if (input === undefined) {
@@ -81,13 +74,14 @@ function addImageInputEventListener() {
     }
 
     input.addEventListener("change", (event) => {
-        const fr = new FileReader();
+        if (input.files !== 0) {
+            const fr = new FileReader();
+            fr.readAsDataURL(input.files[0]);
 
-        fr.readAsDataURL(input.files[0]);
-
-        fr.addEventListener("load", () => {
-            localStorage.setItem("IDimageModal", fr.result);
-        });
+            fr.addEventListener("load", () => {
+                localStorage.setItem("IDimageModal", fr.result);
+            });
+        }
     });
 }
 
@@ -100,9 +94,9 @@ function showID() {
 
 
     container.innerHTML = `
-    <button onclick="location.reload()">Retour</button>
-    <div id="image-content">
-    <img src="${imageURL}" alt="Pièce d'indentité">
+    <div id="content" class="id-div">
+    <button id="return-button" onclick="location.reload()">Retour</button>
+    <img id="id-image" src="${imageURL}" alt="Pièce d'indentité">
     </div>`;
 }
 
@@ -175,27 +169,26 @@ function unregisterServiceWorkers() {
  * 
  * @returns {void}
  */
-function showDataModal() {
-    if (!confirm("L'information engegistrée est incomplète ou vide. Voulez-vous la compléter maintenant?")) {
-        return;
-    }
-
+function getUserData() {
     const container = document.getElementById("container");
     container.innerHTML = ``;
 
     for (let i = 0; i < INPUT_LIST.length; i++) {
         const input = INPUT_LIST[i];
-
+        let currentLocalStorageValue = localStorage.getItem(`${input.id}Modal`);
+        if (currentLocalStorageValue === null) {
+            currentLocalStorageValue = "";
+        }
         if (input.type === "radio") {
             let html = `<tr><td>${input.name}</td><td>`;
             const options = input.autocomplete.split(":");
 
             for (let i = 0; i < options.length; i++) {
                 const radioLabel = options[i];
-                html += "<div>"
-                html += `<input type="radio" class="user-input" id="${input.id}Modal${radioLabel}" name="${input.id}Modal" autocomplete="on" value="${radioLabel}" />`
-                html += `<label  for="${input.id}Modal${radioLabel}">${radioLabel}</label>`
-                html += "</div>"
+                html += "<div>";
+                html += `<input type="radio" class="user-input" id="${input.id}Modal${radioLabel}" name="${input.id}Modal" autocomplete="on" value="${radioLabel}" ${radioLabel === currentLocalStorageValue ? 'checked' : ''}>`;
+                html += `<label  for="${input.id}Modal${radioLabel}">${radioLabel}</label>`;
+                html += "</div>";
             }
             html += "</td></tr>";
             container.innerHTML += html;
@@ -204,10 +197,11 @@ function showDataModal() {
             container.innerHTML += `<tr><td><label for="${input.id}Modal">${input.name}</label></td><td><input type="${input.type}" class="user-input" id="${input.id}Modal" accept="${input.autocomplete}" change="saveID()" /></td></tr>`;
         }
         else {
-            container.innerHTML += `<tr><td><label for="${input.id}Modal">${input.name}</label></td><td><input type="${input.type}" class="user-input"  id="${input.id}Modal" autocomplete="${input.autocomplete}" /></td></tr>`;
+            container.innerHTML += `<tr><td><label for="${input.id}Modal">${input.name}</label></td><td><input type="${input.type}" class="user-input"  id="${input.id}Modal" value="${currentLocalStorageValue}" autocomplete="${input.autocomplete}" /></td></tr>`;
         }
+
     }
-    container.innerHTML += `<button onclick="submitUserData()">Soumettre</button>`;
+    container.innerHTML += `<button onclick="submitUserData()">Enregistrer</button>`;
 
     addImageInputEventListener();
 }
@@ -221,7 +215,6 @@ function showDataModal() {
  */
 function submitUserData() {
     const userInfo = Array.from(document.querySelectorAll('.user-input')).map(input => {
-        console.log(input);
         if (input.type == 'radio') {
             let checkedRadio = document.querySelector(`input[name="${input.name}"]:checked`);
             return { id: input.name, value: checkedRadio ? checkedRadio.value : "" };
@@ -266,33 +259,14 @@ function autofill(formInfo) {
     }
 }
 
-/**
- * Resets the user data by clearing the local storage and updating the application version to "UNDEFINED".
- * 
- * This function prompts the user with a confirmation message before proceeding with the data reset. If the user confirms,
- * the function clears the local storage using the `localStorage.clear()` method. It then calls the `updateApplication` function
- * with the argument "UNDEFINED" to update the application version. Finally, the function reloads the page using `location.reload()`.
- * 
- * @returns {void} This function does not return any value.
- */
-function resetUserData() {
-    if (!confirm("Attention, vous allez perdre toutes les données enregistrées.")) {
-        return;
-    }
-    localStorage.clear();
-    updateApplication("UNDEFINED");
-}
-
 // #endregion
 
 // #region Validators
 
 /**
- * Fetches validators from the given gym HTML and appends them to the "validations" element.
+ * Retrieves the validators from the provided HTML and appends them to the "validations" element.
  * 
- * @param {string} gymHtml - The HTML content of the gym.
- * @param {string} bootstrapBackgroundColor - The background color class from Bootstrap framework (default: "bg-primary").
- * @param {string} bootstrapTextColor - The text color class from Bootstrap framework (default: "text-white").
+ * @param {string} gymHtml - The HTML containing the validators.
  * @returns {void}
  */
 function fetchValidators(gymHtml) {

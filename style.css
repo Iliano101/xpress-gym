@@ -4,6 +4,8 @@
     --subpage-dark-color: #2e303a;
     --light-text-color: white;
     --accent-color: #9cb0ff;
+    --dark-accent-color: #8294da;
+    --very-dark-accent-color: #454e73;
 }
 
 /* Specific changes */
@@ -24,11 +26,96 @@ html * {
     justify-content: space-around;
 }
 
+#title {
+    font-size: 10vmin;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+/* Code input */
+#code-input-div {
+    background-color: var(--subpage-dark-color);
+    width: 95%;
+    padding: 2%;
+    border-radius: 5vmin;
+}
+
+#RegCode {
+    border-radius: 5vmin;
+    border: none;
+    width: 100%;
+    background-color: var(--accent-color);
+    color: var(--subpage-dark-color);
+    font-size: 10vmin;
+    text-align: center;
+}
+
+#reg-code-label {
+    width: 100%;
+    background-color: var(--subpage-dark-color);
+    color: var(--accent-color);
+}
+
+/* Buttons */
+#buttons-div {
+    display: flex;
+    flex-direction: column;
+    height: 30vh;
+    width: 95%;
+    padding: 2%;
+    border-radius: 5vmin;
+    background-color: var(--subpage-dark-color);
+}
+
+.accent-button {
+    border: none;
+    width: 100%;
+    flex: 1;
+    margin: 2vmin auto 2vmin auto;
+}
+
+/* ID page */
+
+.id-div {
+    justify-content: start;
+}
+
+#return-button {
+    font-size: 7vmin;
+    border: none;
+    align-self: flex-start;
+    margin-bottom: 2%;
+    padding: 2%;
+}
+
+#id-image {
+    width: 95%;
+    height: 95%;
+    object-fit: contain;
+}
+
+
+/* Data page */
+#data-div {}
+
 /* Helper Classes */
 .hidden {
     display: none;
 }
 
-.text-bold {
-    font-weight: bold;
+/* Global */
+button {
+    background-color: var(--accent-color);
+    color: var(--subpage-dark-color);
+    border-radius: 5vmin;
+    border: none;
+}
+
+button:hover {
+    background-color: var(--dark-accent-color);
+}
+
+button:disabled {
+    background-color: var(--very-dark-accent-color);
+    color: var(--page-dark-color);
 }
