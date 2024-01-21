@@ -52,6 +52,7 @@ html * {
 
 #reg-code-label {
     width: 100%;
+    font-size: 5vmin;
     background-color: var(--subpage-dark-color);
     color: var(--accent-color);
 }
@@ -72,6 +73,7 @@ html * {
     width: 100%;
     flex: 1;
     margin: 2vmin auto 2vmin auto;
+    font-size: 2vmax;
 }
 
 /* ID page */
@@ -81,11 +83,11 @@ html * {
 }
 
 #return-button {
-    font-size: 7vmin;
+    font-size: 5vmin;
     border: none;
     align-self: flex-start;
     margin-bottom: 2%;
-    padding: 2%;
+    padding: 2vmin 4vmin 2vmin 4vmin;
 }
 
 #id-image {
@@ -96,7 +98,117 @@ html * {
 
 
 /* Data page */
-#data-div {}
+
+#content-data-page {
+    height: calc(100vh - 16px);
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    justify-content: space-around;
+}
+
+@media screen and (max-height: 800px) {
+    #content-data-page {
+        height: 100%;
+    }
+}
+
+#title-data {
+    font-size: 7vmin;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+#input-container {
+    display: flex;
+    flex-direction: column;
+    border-radius: 5vmin;
+    background-color: var(--subpage-dark-color);
+    height: 100%;
+    width: 95%;
+    justify-content: space-between;
+    padding: 2%;
+    margin: 2%;
+}
+
+.row-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    background-color: var(--subpage-dark-color);
+    border-radius: 5vmin;
+    padding: 1% 0 1% 0;
+}
+
+#save-button {
+    font-size: 5vmin;
+    border: none;
+    align-self: center;
+    margin-bottom: 2%;
+    padding: 2vmin 4vmin 2vmin 4vmin;
+}
+
+/* Normal inputs */
+.input-label {
+    font-size: 2vmax;
+    width: 50%;
+    text-align: left;
+    color: var(--accent-color);
+    background-color: var(--subpage-dark-color);
+}
+
+.data-input {
+    font-size: 2vmax;
+    width: 50%;
+    background-color: var(--accent-color);
+    color: var(--subpage-dark-color);
+    border-radius: 5vmin;
+    border: none;
+    padding: 1%;
+}
+
+/* Radio Inputs */
+.radio-input-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 50%;
+    background-color: var(--subpage-dark-color);
+}
+
+.single-choice-div {
+    background-color: var(--subpage-dark-color);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.radio-label {
+    font-size: 2vmax;
+    color: var(--accent-color);
+    background-color: var(--subpage-dark-color);
+}
+
+.radio-input {
+    --radio-size: 2vmax;
+    width: var(--radio-size);
+    height: var(--radio-size);
+}
+
+
+/* File Inputs */
+.file-input {
+    font-size: 2vmax;
+    width: 50%;
+    background-color: var(--accent-color);
+    color: var(--subpage-dark-color);
+    border-radius: 5vmin;
+    border: none;
+    padding: 1%;
+}
 
 /* Helper Classes */
 .hidden {

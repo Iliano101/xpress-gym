@@ -173,6 +173,8 @@ function getUserData() {
     const container = document.getElementById("container");
     container.innerHTML = ``;
 
+    let newHtml = '<div id="content-data-page"><h1 id="title-data">Entrez vos informations</h1><div id="input-container">';
+
     for (let i = 0; i < INPUT_LIST.length; i++) {
         const input = INPUT_LIST[i];
         let currentLocalStorageValue = localStorage.getItem(`${input.id}Modal`);
@@ -180,29 +182,30 @@ function getUserData() {
             currentLocalStorageValue = "";
         }
         if (input.type === "radio") {
-            let html = `<tr><td>${input.name}</td><td>`;
+            newHtml += `<div class="row-container"><span class="input-label">${input.name}</span>`;
             const options = input.autocomplete.split(":");
 
+            newHtml += "<div class='radio-input-container'>";
             for (let i = 0; i < options.length; i++) {
                 const radioLabel = options[i];
-                html += "<div>";
-                html += `<input type="radio" class="user-input" id="${input.id}Modal${radioLabel}" name="${input.id}Modal" autocomplete="on" value="${radioLabel}" ${radioLabel === currentLocalStorageValue ? 'checked' : ''}>`;
-                html += `<label  for="${input.id}Modal${radioLabel}">${radioLabel}</label>`;
-                html += "</div>";
+                newHtml += "<div class='single-choice-div'>";
+                newHtml += `<input type="radio" class="user-input radio-input" id="${input.id}Modal${radioLabel}" name="${input.id}Modal" autocomplete="on" value="${radioLabel}" ${radioLabel === currentLocalStorageValue ? 'checked' : ''}>`;
+                newHtml += `<label class="radio-label" for="${input.id}Modal${radioLabel}">${radioLabel}</label>`;
+                newHtml += "</div>";
             }
-            html += "</td></tr>";
-            container.innerHTML += html;
+            newHtml += "</div></div>";
         }
         else if (input.type === "file") {
-            container.innerHTML += `<tr><td><label for="${input.id}Modal">${input.name}</label></td><td><input type="${input.type}" class="user-input" id="${input.id}Modal" accept="${input.autocomplete}" change="saveID()" /></td></tr>`;
+            newHtml += `<div class="row-container"><label class="input-label" for="${input.id}Modal">${input.name}</label><input type="${input.type}" class="user-input file-input" id="${input.id}Modal" accept="${input.autocomplete}" change="saveID()"/></div>`;
         }
         else {
-            container.innerHTML += `<tr><td><label for="${input.id}Modal">${input.name}</label></td><td><input type="${input.type}" class="user-input"  id="${input.id}Modal" value="${currentLocalStorageValue}" autocomplete="${input.autocomplete}" /></td></tr>`;
+            newHtml += `<div class="row-container"><label class="input-label" for="${input.id}Modal">${input.name}</label><input type="${input.type}" class="user-input data-input"  id="${input.id}Modal" value="${currentLocalStorageValue}" autocomplete="${input.autocomplete}"/></div>`;
         }
 
     }
-    container.innerHTML += `<button onclick="submitUserData()">Enregistrer</button>`;
+    newHtml += `</div><button id="save-button" onclick="submitUserData()">Enregistrer</button></div>`;
 
+    container.innerHTML = newHtml;
     addImageInputEventListener();
 }
 
