@@ -6,6 +6,9 @@
     --accent-color: #9cb0ff;
     --dark-accent-color: #8294da;
     --very-dark-accent-color: #454e73;
+
+    --data-page-main-font-size: 3vmin;
+    --data-page-large-font-size: 5vmin;
 }
 
 /* Specific changes */
@@ -100,6 +103,7 @@ html * {
 /* Data page */
 
 #content-data-page {
+    margin: auto;
     height: calc(100vh - 16px);
     display: flex;
     flex-direction: column;
@@ -108,14 +112,9 @@ html * {
     justify-content: space-around;
 }
 
-@media screen and (max-height: 800px) {
-    #content-data-page {
-        height: 100%;
-    }
-}
 
 #title-data {
-    font-size: 7vmin;
+    font-size: var(--data-page-large-font-size);
     font-weight: bold;
     color: var(--accent-color);
 }
@@ -125,25 +124,23 @@ html * {
     flex-direction: column;
     border-radius: 5vmin;
     background-color: var(--subpage-dark-color);
-    height: 100%;
-    width: 95%;
     justify-content: space-between;
     padding: 2%;
     margin: 2%;
+    width: 95%;
 }
 
 .row-container {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    width: 100%;
     background-color: var(--subpage-dark-color);
     border-radius: 5vmin;
     padding: 1% 0 1% 0;
 }
 
 #save-button {
-    font-size: 5vmin;
+    font-size: var(--data-page-large-font-size);
     border: none;
     align-self: center;
     margin-bottom: 2%;
@@ -152,7 +149,7 @@ html * {
 
 /* Normal inputs */
 .input-label {
-    font-size: 2vmax;
+    font-size: var(--data-page-main-font-size);
     width: 50%;
     text-align: left;
     color: var(--accent-color);
@@ -160,7 +157,7 @@ html * {
 }
 
 .data-input {
-    font-size: 2vmax;
+    font-size: var(--data-page-main-font-size);
     width: 50%;
     background-color: var(--accent-color);
     color: var(--subpage-dark-color);
@@ -187,13 +184,13 @@ html * {
 }
 
 .radio-label {
-    font-size: 2vmax;
+    font-size: var(--data-page-main-font-size);
     color: var(--accent-color);
     background-color: var(--subpage-dark-color);
 }
 
 .radio-input {
-    --radio-size: 2vmax;
+    --radio-size: var(--data-page-main-font-size);
     width: var(--radio-size);
     height: var(--radio-size);
 }
@@ -201,7 +198,7 @@ html * {
 
 /* File Inputs */
 .file-input {
-    font-size: 2vmax;
+    font-size: var(--data-page-main-font-size);
     width: 50%;
     background-color: var(--accent-color);
     color: var(--subpage-dark-color);
