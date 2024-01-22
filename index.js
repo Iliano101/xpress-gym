@@ -196,7 +196,7 @@ function getUserData() {
             newHtml += "</div></div>";
         }
         else if (input.type === "file") {
-            newHtml += `<div class="row-container"><label class="input-label" for="${input.id}Modal">${input.name}</label><input type="${input.type}" class="user-input file-input" id="${input.id}Modal" accept="${input.autocomplete}" change="saveID()"/></div>`;
+            newHtml += `<div class="row-container"><label class="input-label" for="${input.id}Modal">${input.name}</label><label class="file-input">Choisir une photo<input type="${input.type}" class="user-input hidden" id="${input.id}Modal" accept="${input.autocomplete}" change="saveID()"/></label></div>`;
         }
         else {
             newHtml += `<div class="row-container"><label class="input-label" for="${input.id}Modal">${input.name}</label><input type="${input.type}" class="user-input data-input"  id="${input.id}Modal" value="${currentLocalStorageValue}" autocomplete="${input.autocomplete}"/></div>`;
