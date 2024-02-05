@@ -1,28 +1,68 @@
 // #region Constants
 const SERVICEWORKER_CACHE_NAME = "express-gym-v1";
 const INPUT_LIST = [
-
     { id: "Email", name: "Email", type: "email", autocomplete: "email" },
-    { id: "FirstName", name: "Prénom", type: "text", autocomplete: "given-name" },
+    {
+        id: "FirstName",
+        name: "Prénom",
+        type: "text",
+        autocomplete: "given-name",
+    },
     { id: "LastName", name: "Nom", type: "text", autocomplete: "family-name" },
-    { id: "YearOfBirth", name: "Année de naissance", type: "number", autocomplete: "bday-year" },
+    {
+        id: "YearOfBirth",
+        name: "Année de naissance",
+        type: "number",
+        autocomplete: "bday-year",
+    },
     { id: "Gender", name: "Sexe", type: "radio", autocomplete: "M:F" },
-    { id: "StreetAddress", name: "Adresse", type: "text", autocomplete: "street-address" },
-    { id: "Appartment", name: "Appartement", type: "text", autocomplete: "address-line2" },
+    {
+        id: "StreetAddress",
+        name: "Adresse",
+        type: "text",
+        autocomplete: "street-address",
+    },
+    {
+        id: "Appartment",
+        name: "Appartement",
+        type: "text",
+        autocomplete: "address-line2",
+    },
     { id: "City", name: "Ville", type: "text", autocomplete: "address-level2" },
-    { id: "StateProv", name: "Province", type: "text", autocomplete: "address-level1" },
-    { id: "PostalCode", name: "Code postal", type: "text", autocomplete: "postal-code" },
-    { id: "PhoneMobile", name: "Téléphone mobile", type: "tel", autocomplete: "tel" },
+    {
+        id: "StateProv",
+        name: "Province",
+        type: "text",
+        autocomplete: "address-level1",
+    },
+    {
+        id: "PostalCode",
+        name: "Code postal",
+        type: "text",
+        autocomplete: "postal-code",
+    },
+    {
+        id: "PhoneMobile",
+        name: "Téléphone mobile",
+        type: "tel",
+        autocomplete: "tel",
+    },
     { id: "PromoCode", name: "Code VIP", type: "text", autocomplete: "off" },
-    { id: "IDimage", name: "Pièce d'identité", type: "file", autocomplete: "image/*" }
+    {
+        id: "IDimage",
+        name: "Pièce d'identité",
+        type: "file",
+        autocomplete: "image/*",
+    },
 ];
 
 const STORED_VALIDATORS_NAMES = {
     html: "gymHtml",
-    date: "validatorsDate"
-}
+    date: "validatorsDate",
+};
 
-const GITHUB_API_URL = "https://api.github.com/repos/iliano101/xpress-gym/commits/vercel";
+const GITHUB_API_URL =
+    "https://api.github.com/repos/iliano101/xpress-gym/commits/vercel";
 const CURRENT_VERSION_STORAGE_KEY = "currentVersion";
 
 // #endregion
@@ -51,15 +91,14 @@ function executePageLoad() {
 // #region Service Worker
 /**
  * Registers a service worker for the current page.
- * 
+ *
  * @returns {Promise} A promise that resolves when the service worker is successfully registered, or rejects with an error if registration fails.
  */
 async function registerServiceWorker() {
-    if ('serviceWorker' in navigator) {
+    if ("serviceWorker" in navigator) {
         try {
-            await navigator.serviceWorker.register('./sw.js');
-        }
-        catch (err) {
+            await navigator.serviceWorker.register("./sw.js");
+        } catch (err) {
             console.error(`SW registration failed`);
         }
     }
@@ -92,14 +131,12 @@ function showID() {
     }
     const container = document.getElementById("container");
 
-
     container.innerHTML = `
     <div id="content" class="id-div">
     <button id="return-button" onclick="location.reload()">Retour</button>
     <img id="id-image" src="${imageURL}" alt="Pièce d'indentité">
     </div>`;
 }
-
 
 // #endregion
 
@@ -116,7 +153,11 @@ async function checkForUpdates() {
 
     try {
         const response = await axios.get(GITHUB_API_URL);
-        if (response.status === OK && response.data !== null && response.data !== undefined) {
+        if (
+            response.status === OK &&
+            response.data !== null &&
+            response.data !== undefined
+        ) {
             const latestVersion = response.data.sha;
             if (currentVersion == null || currentVersion != latestVersion) {
                 updateApplication(latestVersion);
@@ -132,7 +173,7 @@ async function checkForUpdates() {
 
 /**
  * Updates the application to a new version.
- * 
+ *
  * @param {string} newVersion - The new version of the application.
  * @returns {void}
  */
@@ -144,19 +185,21 @@ function updateApplication(newVersion) {
 
 /**
  * Unregisters all service workers.
- * 
+ *
  * This function checks if the browser supports service workers and then retrieves all active service worker registrations.
  * It iterates through each registration and unregisters the service worker.
- * 
+ *
  * @returns {void}
  */
 function unregisterServiceWorkers() {
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function (registrations) {
-            for (const serviceWorker of registrations) {
-                serviceWorker.unregister();
-            }
-        });
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+            .getRegistrations()
+            .then(function (registrations) {
+                for (const serviceWorker of registrations) {
+                    serviceWorker.unregister();
+                }
+            });
     }
 }
 // #endregion
@@ -165,14 +208,15 @@ function unregisterServiceWorkers() {
 
 /**
  * Displays a modal with input fields for showing data.
- * 
+ *
  * @returns {void}
  */
 function getUserData() {
     const container = document.getElementById("container");
     container.innerHTML = ``;
 
-    let newHtml = '<div id="content-data-page"><h1 id="title-data">Entrez vos informations</h1><div id="input-container">';
+    let newHtml =
+        '<div id="content-data-page"><h1 id="title-data">Entrez vos informations</h1><div id="input-container">';
 
     for (let i = 0; i < INPUT_LIST.length; i++) {
         const input = INPUT_LIST[i];
@@ -188,19 +232,22 @@ function getUserData() {
             for (let i = 0; i < options.length; i++) {
                 const radioLabel = options[i];
                 newHtml += "<div class='single-choice-div'>";
-                newHtml += `<input type="radio" class="user-input radio-input" id="${input.id}Modal${radioLabel}" name="${input.id}Modal" autocomplete="on" value="${radioLabel}" ${radioLabel === currentLocalStorageValue ? 'checked' : ''}>`;
+                newHtml += `<input type="radio" class="user-input radio-input" id="${
+                    input.id
+                }Modal${radioLabel}" name="${
+                    input.id
+                }Modal" autocomplete="on" value="${radioLabel}" ${
+                    radioLabel === currentLocalStorageValue ? "checked" : ""
+                }>`;
                 newHtml += `<label class="radio-label" for="${input.id}Modal${radioLabel}">${radioLabel}</label>`;
                 newHtml += "</div>";
             }
             newHtml += "</div></div>";
-        }
-        else if (input.type === "file") {
+        } else if (input.type === "file") {
             newHtml += `<div class="row-container"><label class="input-label" for="${input.id}Modal">${input.name}</label><label class="file-input">Choisir une photo<input type="${input.type}" class="user-input hidden" id="${input.id}Modal" accept="${input.autocomplete}" change="saveID()"/></label></div>`;
-        }
-        else {
+        } else {
             newHtml += `<div class="row-container"><label class="input-label" for="${input.id}Modal">${input.name}</label><input type="${input.type}" class="user-input data-input"  id="${input.id}Modal" value="${currentLocalStorageValue}" autocomplete="${input.autocomplete}"/></div>`;
         }
-
     }
     newHtml += `</div><button id="save-button" onclick="submitUserData()">Enregistrer</button></div>`;
 
@@ -216,15 +263,21 @@ function getUserData() {
  * @returns {void}
  */
 function submitUserData() {
-    const userInfo = Array.from(document.querySelectorAll('.user-input')).map(input => {
-        if (input.type == 'radio') {
-            let checkedRadio = document.querySelector(`input[name="${input.name}"]:checked`);
-            return { id: input.name, value: checkedRadio ? checkedRadio.value : "" };
+    const userInfo = Array.from(document.querySelectorAll(".user-input")).map(
+        (input) => {
+            if (input.type == "radio") {
+                let checkedRadio = document.querySelector(
+                    `input[name="${input.name}"]:checked`
+                );
+                return {
+                    id: input.name,
+                    value: checkedRadio ? checkedRadio.value : "",
+                };
+            } else if (input.type !== "file") {
+                return { id: input.id, value: input.value };
+            }
         }
-        else if (input.type !== 'file') {
-            return { id: input.id, value: input.value };
-        }
-    });
+    );
 
     for (let i = 0; i < userInfo.length; i++) {
         const input = userInfo[i];
@@ -237,11 +290,9 @@ function submitUserData() {
     location.reload();
 }
 
-
-
 /**
  * Autofills form fields with values from the provided formInfo object.
- * 
+ *
  * @param {Object} formInfo - The formInfo object containing the values to autofill.
  * @returns {void}
  */
@@ -251,10 +302,11 @@ function autofill(formInfo) {
         const value = formInfo[`${input.id}Modal`];
         if (value !== undefined) {
             if (input.id === "Gender") {
-                document.getElementById("GenderF").checked = value.toLowerCase() === 'f';
-                document.getElementById("GenderM").checked = value.toLowerCase() === 'm';
-            }
-            else if (input.type !== "file") {
+                document.getElementById("GenderF").checked =
+                    value.toLowerCase() === "f";
+                document.getElementById("GenderM").checked =
+                    value.toLowerCase() === "m";
+            } else if (input.type !== "file") {
                 document.getElementById(input.id).value = value;
             }
         }
@@ -267,7 +319,7 @@ function autofill(formInfo) {
 
 /**
  * Retrieves the validators from the provided HTML and appends them to the "validations" element.
- * 
+ *
  * @param {string} gymHtml - The HTML containing the validators.
  * @returns {void}
  */
@@ -276,7 +328,7 @@ function fetchValidators(gymHtml) {
     gymHtml = gymHtml.replace(/<link rel="icon"[^>]*>/g, "");
 
     const parser = new DOMParser();
-    const htmlDoc = parser.parseFromString(gymHtml, 'text/html');
+    const htmlDoc = parser.parseFromString(gymHtml, "text/html");
     const validators = [...htmlDoc.querySelectorAll("[type='hidden']")];
 
     const fragment = document.createDocumentFragment();
@@ -295,35 +347,50 @@ function fetchValidators(gymHtml) {
 
 /**
  * Retrieves the form data from the specified URL and updates the validators if necessary.
- * 
+ *
  * @returns {Promise} A promise that resolves when the form data is retrieved and the validators are updated.
  */
 async function retrieveForm() {
-    const URL = 'https://api.scraperapi.com/?api_key=a96e06b1a1dac98df481e1fa570fd17a&url=https%3A%2F%2Fwww.ggpx.info%2FGuestReg.aspx%3Fgymid%3Dst-jerome';
+    const URL =
+        "https://api.scraperapi.com/?api_key=a96e06b1a1dac98df481e1fa570fd17a&url=https%3A%2F%2Fwww.ggpx.info%2FGuestReg.aspx%3Fgymid%3Dst-jerome";
 
     cachedHTML = localStorage.getItem(STORED_VALIDATORS_NAMES.html);
     cachedDateString = localStorage.getItem(STORED_VALIDATORS_NAMES.date);
 
     let now = new Date();
 
-    if (cachedHTML === null || cachedDateString === null || !areSameDay(new Date(cachedDateString), now)) {
+    if (
+        cachedHTML === null ||
+        cachedDateString === null ||
+        !areSameDay(new Date(cachedDateString), now)
+    ) {
         try {
             const response = await axios.get(URL);
-            if (response.status === 200 && response.data !== null && response.data !== undefined) {
+            if (
+                response.status === 200 &&
+                response.data !== null &&
+                response.data !== undefined
+            ) {
                 //OK
-                localStorage.setItem(STORED_VALIDATORS_NAMES.html, response.data);
+                localStorage.setItem(
+                    STORED_VALIDATORS_NAMES.html,
+                    response.data
+                );
                 now = new Date();
-                localStorage.setItem(STORED_VALIDATORS_NAMES.date, `${now.getMonth() + 1}-${now.getDate()}-${now.getFullYear()}`);
+                localStorage.setItem(
+                    STORED_VALIDATORS_NAMES.date,
+                    `${
+                        now.getMonth() + 1
+                    }-${now.getDate()}-${now.getFullYear()}`
+                );
                 fetchValidators(response.data);
             }
         } catch (err) {
             console.error(err);
         }
-    }
-    else {
+    } else {
         fetchValidators(cachedHTML);
     }
-
 }
 
 /**
@@ -334,9 +401,11 @@ async function retrieveForm() {
  * @returns {boolean} - True if the dates are the same day, false otherwise.
  */
 function areSameDay(date1, date2) {
-    return date1.getDate() === date2.getDate() &&
+    return (
+        date1.getDate() === date2.getDate() &&
         date1.getMonth() === date2.getMonth() &&
-        date1.getFullYear() === date2.getFullYear();
+        date1.getFullYear() === date2.getFullYear()
+    );
 }
 
 // #endregion

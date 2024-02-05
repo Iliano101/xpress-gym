@@ -8,31 +8,27 @@ const staticAssets = [
     "./manifest.webmanifest",
     "./assets/512px-icon.png",
     "./assets/maskable-icon.png",
-    "./assets/svg-icon.svg"
+    "./assets/svg-icon.svg",
 ];
 
-
-self.addEventListener("install", async err => {
+self.addEventListener("install", async (err) => {
     caches.delete(SERVICEWORKER_CACHE_NAME);
     const cache = await caches.open(SERVICEWORKER_CACHE_NAME);
     await cache.addAll(staticAssets);
     return self.skipWaiting();
 });
 
-
-self.addEventListener("activate", event => {
+self.addEventListener("activate", (event) => {
     self.clients.claim();
 });
 
-
-self.addEventListener("fetch", async event => {
+self.addEventListener("fetch", async (event) => {
     const req = event.request;
     const url = new URL(req.url);
 
     if (url.origin === location.origin) {
         event.respondWith(cacheFirst(req));
-    }
-    else {
+    } else {
         event.respondWith(networkAndCache(req));
     }
 });
@@ -49,8 +45,7 @@ async function networkAndCache(req) {
         const fresh = await fetch(req);
         await cache.put(req, fresh.clone());
         return fresh;
-    }
-    catch (err) {
+    } catch (err) {
         const cached = await cache.match(req);
         return cached;
     }
