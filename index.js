@@ -61,7 +61,7 @@ const STORED_VALIDATORS_NAMES = {
     date: "validatorsDate",
 };
 
-const PROXY_URL = "https://xpress-gym-agent.vercel.app";
+const PROXY_URL = "https://html-agent.vercel.app/world-gym";
 const GITHUB_API_URL =
     "https://api.github.com/repos/iliano101/xpress-gym/commits/vercel";
 const CURRENT_VERSION_STORAGE_KEY = "currentVersion";
