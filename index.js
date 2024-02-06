@@ -381,7 +381,7 @@ async function retrieveForm() {
                         now.getMonth() + 1
                     }-${now.getDate()}-${now.getFullYear()}`
                 );
-                fetchValidators(response.data);
+                fetchValidators(response.data.data);
             }
         } catch (err) {
             console.error(err);
