@@ -351,8 +351,7 @@ function fetchValidators(gymHtml) {
  * @returns {Promise} A promise that resolves when the form data is retrieved and the validators are updated.
  */
 async function retrieveForm() {
-    const URL =
-        "https://api.scraperapi.com/?api_key=a96e06b1a1dac98df481e1fa570fd17a&url=https%3A%2F%2Fwww.ggpx.info%2FGuestReg.aspx%3Fgymid%3Dst-jerome";
+    const URL = "https://xpress-gym-agent.vercel.app/gym";
 
     cachedHTML = localStorage.getItem(STORED_VALIDATORS_NAMES.html);
     cachedDateString = localStorage.getItem(STORED_VALIDATORS_NAMES.date);
