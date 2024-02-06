@@ -61,6 +61,7 @@ const STORED_VALIDATORS_NAMES = {
     date: "validatorsDate",
 };
 
+const PROXY_URL = "https://xpress-gym-agent.vercel.app/gym";
 const GITHUB_API_URL =
     "https://api.github.com/repos/iliano101/xpress-gym/commits/vercel";
 const CURRENT_VERSION_STORAGE_KEY = "currentVersion";
@@ -351,8 +352,6 @@ function fetchValidators(gymHtml) {
  * @returns {Promise} A promise that resolves when the form data is retrieved and the validators are updated.
  */
 async function retrieveForm() {
-    const URL = "https://xpress-gym-agent.vercel.app/gym";
-
     cachedHTML = localStorage.getItem(STORED_VALIDATORS_NAMES.html);
     cachedDateString = localStorage.getItem(STORED_VALIDATORS_NAMES.date);
 
@@ -364,7 +363,7 @@ async function retrieveForm() {
         !areSameDay(new Date(cachedDateString), now)
     ) {
         try {
-            const response = await axios.get(URL);
+            const response = await axios.get(PROXY_URL);
             if (
                 response.status === 200 &&
                 response.data !== null &&
