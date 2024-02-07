@@ -101,7 +101,8 @@ async function registerServiceWorker() {
         try {
             await navigator.serviceWorker.register("./sw.js");
         } catch (err) {
-            console.error(`SW registration failed`);
+            err;
+            showUserError(err, `SW registration failed`);
         }
     }
 }
@@ -167,7 +168,7 @@ async function checkForUpdates() {
             }
         }
     } catch (err) {
-        console.error(err);
+        showUserError(err, "Failed to check for updates on GitHub");
     }
 
     executePageLoad();
@@ -183,6 +184,7 @@ function updateApplication(newVersion) {
     unregisterServiceWorkers();
     caches.delete(SERVICEWORKER_CACHE_NAME);
     localStorage.setItem(CURRENT_VERSION_STORAGE_KEY, newVersion);
+    location.reload();
 }
 
 /**
@@ -354,7 +356,7 @@ async function retrieveForm() {
         );
         cacheParsed = true;
     } catch (error) {
-        console.error(error);
+        showUserError(err, "Failed to parse cached validators");
     }
 
     cachedDateString = localStorage.getItem(STORED_VALIDATORS_NAMES.date);
@@ -389,7 +391,10 @@ async function retrieveForm() {
                 appendValidators(response.data.data.inputs);
             }
         } catch (err) {
-            console.error(err);
+            showUserError(
+                err,
+                "Failed to retrieve data from the proxy server."
+            );
         }
     } else {
         appendValidators(cachedValidatorsArray);
@@ -412,3 +417,15 @@ function areSameDay(date1, date2) {
 }
 
 // #endregion
+
+// #region Utils
+
+function showUserError(err, userMessage) {
+    const errorObjet = {
+        status: err.response.status ? err.response.status : "No status",
+        errorMessage: err.response.data ? err.response.data : err.message,
+        userMessage: userMessage,
+    };
+    console.error(errorObjet);
+}
+//#endregion
