@@ -345,14 +345,24 @@ function appendValidators(validatorsArray) {
  * @returns {Promise} A promise that resolves when the form data is retrieved and the validators are updated.
  */
 async function retrieveForm() {
-    cachedValidatorsArray = JSON.parse(
-        localStorage.getItem(STORED_VALIDATORS_NAMES.htmlArray)
-    );
+    let cachedValidatorsArray;
+    let cacheParsed = false;
+
+    try {
+        cachedValidatorsArray = JSON.parse(
+            localStorage.getItem(STORED_VALIDATORS_NAMES.htmlArray)
+        );
+        cacheParsed = true;
+    } catch (error) {
+        console.error(error);
+    }
+
     cachedDateString = localStorage.getItem(STORED_VALIDATORS_NAMES.date);
 
     let now = new Date();
 
     if (
+        !cacheParsed ||
         cachedValidatorsArray === null ||
         cachedDateString === null ||
         !areSameDay(new Date(cachedDateString), now)
