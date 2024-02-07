@@ -61,8 +61,8 @@ const STORED_VALIDATORS_NAMES = {
     date: "validatorsDate",
 };
 
-//const PROXY_URL = "https://html-agent.vercel.app/world-gym";
-const PROXY_URL = "http://localhost:5000/world-gym";
+const PROXY_URL = "https://html-agent.vercel.app/world-gym";
+//const PROXY_URL = "http://localhost:5000/world-gym";
 const GITHUB_API_URL =
     "https://api.github.com/repos/iliano101/xpress-gym/commits/vercel";
 const CURRENT_VERSION_STORAGE_KEY = "currentVersion";
@@ -330,7 +330,7 @@ function appendValidators(validatorsArray) {
 
     for (let i = 0; i < validatorsArray.length; i++) {
         const validator = validatorsArray[i];
-        validatorDiv.innerHTML.appendChild(validator);
+        validatorDiv.insertAdjacentHTML("beforeend", validator);
     }
 
     const btnSubmit = document.getElementById("submit-button");
@@ -345,7 +345,7 @@ function appendValidators(validatorsArray) {
  * @returns {Promise} A promise that resolves when the form data is retrieved and the validators are updated.
  */
 async function retrieveForm() {
-    cachedHTML = JSON.parse(
+    cachedValidatorsArray = JSON.parse(
         localStorage.getItem(STORED_VALIDATORS_NAMES.htmlArray)
     );
     cachedDateString = localStorage.getItem(STORED_VALIDATORS_NAMES.date);
@@ -353,7 +353,7 @@ async function retrieveForm() {
     let now = new Date();
 
     if (
-        cachedHTML === null ||
+        cachedValidatorsArray === null ||
         cachedDateString === null ||
         !areSameDay(new Date(cachedDateString), now)
     ) {
@@ -376,13 +376,13 @@ async function retrieveForm() {
                         now.getMonth() + 1
                     }-${now.getDate()}-${now.getFullYear()}`
                 );
-                appendValidators(response.data);
+                appendValidators(response.data.data.inputs);
             }
         } catch (err) {
             console.error(err);
         }
     } else {
-        appendValidators(cachedHTML);
+        appendValidators(cachedValidatorsArray);
     }
 }
 
