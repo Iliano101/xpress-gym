@@ -57,11 +57,12 @@ const INPUT_LIST = [
 ];
 
 const STORED_VALIDATORS_NAMES = {
-    html: "gymHtml",
+    htmlArray: "validatorsHtml",
     date: "validatorsDate",
 };
 
-const PROXY_URL = "https://html-agent.vercel.app/world-gym";
+//const PROXY_URL = "https://html-agent.vercel.app/world-gym";
+const PROXY_URL = "http://localhost:5000/world-gym";
 const GITHUB_API_URL =
     "https://api.github.com/repos/iliano101/xpress-gym/commits/vercel";
 const CURRENT_VERSION_STORAGE_KEY = "currentVersion";
@@ -324,21 +325,13 @@ function autofill(formInfo) {
  * @param {string} gymHtml - The HTML containing the validators.
  * @returns {void}
  */
-function fetchValidators(gymHtml) {
-    gymHtml = gymHtml.replace(/<img[^>]*>/g, "");
-    gymHtml = gymHtml.replace(/<link rel="icon"[^>]*>/g, "");
+function appendValidators(validatorsArray) {
+    const validatorDiv = document.getElementById("validations");
 
-    const parser = new DOMParser();
-    const htmlDoc = parser.parseFromString(gymHtml, "text/html");
-    const validators = [...htmlDoc.querySelectorAll("[type='hidden']")];
-
-    const fragment = document.createDocumentFragment();
-
-    for (let i = 0; i < validators.length; i++) {
-        fragment.appendChild(validators[i].cloneNode(true));
+    for (let i = 0; i < validatorsArray.length; i++) {
+        const validator = validatorsArray[i];
+        validatorDiv.innerHTML.appendChild(validator);
     }
-
-    document.getElementById("validations").appendChild(fragment);
 
     const btnSubmit = document.getElementById("submit-button");
 
@@ -352,7 +345,9 @@ function fetchValidators(gymHtml) {
  * @returns {Promise} A promise that resolves when the form data is retrieved and the validators are updated.
  */
 async function retrieveForm() {
-    cachedHTML = localStorage.getItem(STORED_VALIDATORS_NAMES.html);
+    cachedHTML = JSON.parse(
+        localStorage.getItem(STORED_VALIDATORS_NAMES.htmlArray)
+    );
     cachedDateString = localStorage.getItem(STORED_VALIDATORS_NAMES.date);
 
     let now = new Date();
@@ -371,8 +366,8 @@ async function retrieveForm() {
             ) {
                 //OK
                 localStorage.setItem(
-                    STORED_VALIDATORS_NAMES.html,
-                    response.data
+                    STORED_VALIDATORS_NAMES.htmlArray,
+                    JSON.stringify(response.data.data.inputs)
                 );
                 now = new Date();
                 localStorage.setItem(
@@ -381,13 +376,13 @@ async function retrieveForm() {
                         now.getMonth() + 1
                     }-${now.getDate()}-${now.getFullYear()}`
                 );
-                fetchValidators(response.data.data);
+                appendValidators(response.data);
             }
         } catch (err) {
             console.error(err);
         }
     } else {
-        fetchValidators(cachedHTML);
+        appendValidators(cachedHTML);
     }
 }
 
